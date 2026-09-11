@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Niveaux de tennis</title>
+    <style>
+      :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #0b1020; color: #f4f7ff; }
+      body { margin: 0; padding: 24px; background: radial-gradient(circle at 90% 0%, #194d57, #0b1020 58%); }
+      main { width: min(100%, 680px); margin: 0 auto; }
+        .logo { width: 96px; height: 96px; border-radius: 24px; object-fit: cover; box-shadow: 0 16px 38px rgba(0,0,0,.3); }
+      h1 { margin: 18px 0 12px; font-size: clamp(2rem, 9vw, 3.6rem); line-height: 1; letter-spacing: -.05em; }
+      .intro { color: #aab6d5; font-size: 1.05rem; line-height: 1.65; }
+      .level { margin-top: 16px; padding: 18px; border: 1px solid rgba(170, 190, 230, .2); border-radius: 18px; background: rgba(24, 35, 66, .84); }
+      .level span { color: #8fe0d6; font-size: .75rem; font-weight: 800; letter-spacing: .12em; }
+      h2 { margin: 8px 0; font-size: 1.25rem; }
+      .level p { margin: 0; color: #aab6d5; line-height: 1.55; }
+        .scale-note { margin: 24px 0 4px; color: #8fe0d6; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img class="logo" src="/app/assets/tennis-rank-logo.webp" alt="Logo Tennis Rank" />
+      <h1>Niveaux de tennis</h1>
+      <p class="intro">L'échelle Tennis Rank va de E, découverte, à S, compétition.</p>
+      <p class="scale-note">Échelle Tennis Rank · E → S</p>
+      <section class="level">
+        <span>RANG E · DÉCOUVERTE</span>
+        <h2>Tu prends tes repères</h2>
+        <p>Tu découvres les gestes, le terrain et les règles du tennis.</p>
+      </section>
+      <section class="level">
+        <span>RANG D · DÉBUTANT</span>
+        <h2>Tu commences à échanger</h2>
+        <p>Tu renvoies plusieurs balles et tu construis tes premiers points.</p>
+      </section>
+      <section class="level">
+        <span>RANG C · INTERMÉDIAIRE</span>
+        <h2>Tu construis le point</h2>
+        <p>Tu échanges régulièrement et tu utilises coup droit et revers.</p>
+      </section>
+      <section class="level">
+        <span>RANG B · CONFIRMÉ</span>
+        <h2>Tu imposes ton intention</h2>
+        <p>Tu varies tes frappes, ton placement et ton rythme selon l'adversaire.</p>
+      </section>
+      <section class="level">
+        <span>RANG A · AVANCÉ</span>
+        <h2>Tu maîtrises les détails</h2>
+        <p>Tu lis le jeu, défends efficacement et exploites les espaces.</p>
+      </section>
+      <section class="level">
+        <span>RANG S · COMPÉTITION</span>
+        <h2>Tu joues pour performer</h2>
+        <p>Tu prépares tes matchs, adaptes ta stratégie et gères les moments clés.</p>
+      </section>
+    </main>
+  </body>
+</html>

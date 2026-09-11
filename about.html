@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>À propos de Tennis Levels</title>
+    <style>
+      :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #0b1020; color: #f4f7ff; }
+      body { margin: 0; padding: 24px; background: #0b1020; }
+      main { width: min(100%, 680px); margin: 0 auto; }
+        .logo { width: 96px; height: 96px; border-radius: 24px; object-fit: cover; box-shadow: 0 16px 38px rgba(0,0,0,.3); }
+      h1 { margin: 18px 0; font-size: clamp(2rem, 9vw, 3.6rem); letter-spacing: -.05em; }
+      p { color: #aab6d5; font-size: 1.05rem; line-height: 1.7; }
+      .card { margin-top: 28px; padding: 20px; border: 1px solid rgba(170, 190, 230, .2); border-radius: 18px; background: #182342; }
+      code { color: #8fe0d6; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img class="logo" src="/app/assets/tennis-rank-logo.webp" alt="Logo Tennis Rank" />
+        <h1>À propos de Tennis Rank</h1>
+      <p>
+        Tennis Rank associe une échelle E–S, une évaluation en cinq questions
+        et des objectifs de progression faciles à comprendre.
+      </p>
+      <div class="card">
+        <p>
+          L'application appelle <code>/api/mobile/sync</code> pour obtenir
+            l'index des pages, puis charge chaque page HTML avec son <code>htmlUrl</code>.
+            Les écrans <code>levels.html</code> et <code>assessment.html</code>
+            peuvent être affichés dans une WebView.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
