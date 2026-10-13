@@ -5,27 +5,63 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Tennis Rank — Inscription (2/2)</title>
     <style>
-      :root{color-scheme:dark;font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;--muted:#aab6d5;--accent:#79a9ff}
-      body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%, #243d72,#0b1020 60%);color:#f4f7ff;display:grid;place-items:center;padding:24px}
-      main{width:min(100%,520px)}
-      .card{padding:20px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.06));border:1px solid rgba(170,190,230,0.12)}
-      h1{margin:0 0 8px}
-      p.lead{margin:0 0 12px;color:var(--muted)}
+      :root{color-scheme:dark;--bg:#0b1020;--card-from:rgba(255,255,255,0.03);--card-to:rgba(0,0,0,0.08);--accent-1:#79a9ff;--accent-2:#5d8dff;--muted:#aab6d5;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+      *{box-sizing:border-box}
+      html,body{height:100%}
+      body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%, #243d72, var(--bg) 60%);color:#f4f7ff;display:grid;place-items:center;padding:24px;overflow:hidden}
+      #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+      main{width:min(100%,520px);z-index:1}
+      .card{padding:22px 20px;border-radius:18px;background:linear-gradient(180deg,var(--card-from),var(--card-to));border:1px solid rgba(170,190,230,0.18);box-shadow:0 18px 44px rgba(0,0,0,.38);backdrop-filter:blur(8px)saturate(1.08);position:relative;overflow:hidden;animation:cardFloat 6s ease-in-out infinite}
+      @keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+      .card::before{content:"";position:absolute;inset:-20% auto auto -15%;width:160px;height:160px;background:radial-gradient(circle, rgba(121,169,255,0.16), rgba(121,169,255,0));filter:blur(18px);pointer-events:none}
+      .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+      .brand{display:flex;align-items:center;gap:10px;color:#eaf1ff;font-weight:800}
+      .mini-logo{width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));box-shadow:0 10px 24px rgba(95,137,255,.25)}
+      .mini-logo img{width:28px;height:28px;object-fit:cover;border-radius:9px}
+      .step-indicator{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);font-weight:700}
+      .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.12);display:inline-block;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.04)}
+      .dot.active{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));box-shadow:0 0 18px rgba(121,169,255,.4)}
+      .progress{height:6px;border-radius:999px;background:rgba(255,255,255,0.04);overflow:hidden;margin:8px 0 18px}
+      .progress > span{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));border-radius:inherit;box-shadow:0 8px 18px rgba(93,141,255,.22)}
+      h1{margin:0 0 8px;font-size:clamp(1.6rem,5vw,2.2rem)}
+      p.lead{margin:0 0 16px;color:var(--muted);line-height:1.6}
       .field{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-      input{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:rgba(12,18,32,0.45);color:inherit}
-      .primary{background:linear-gradient(90deg,var(--accent),#5d8dff);padding:12px;border-radius:999px;border:none;color:#081126;font-weight:800;cursor:pointer}
-      .secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:10px;cursor:pointer;color:var(--muted)}
-      .small{color:var(--muted);font-size:.95rem}
-      .rules{font-size:.9rem;color:var(--muted);margin-top:8px}
+      label{font-weight:700;color:#dbe8ff;font-size:.95rem}
+      input{padding:12px 14px;border-radius:12px;border:1px solid rgba(170,190,230,0.12);background:linear-gradient(180deg, rgba(12,18,32,0.52), rgba(12,18,32,0.42));color:inherit;font-size:1rem;outline:none;transition:box-shadow .18s ease, transform .12s ease}
+      input::placeholder{color:#9fb0da}
+      input:focus{box-shadow:0 6px 30px rgba(89,124,255,0.12), inset 0 0 0 1px rgba(121,169,255,0.06);transform:translateY(-1px)}
+      .primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));padding:12px 18px;border-radius:999px;border:none;color:#081126;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(95,137,255,.28);position:relative;overflow:hidden}
+      .secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:12px;cursor:pointer;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+      .actions{display:flex;gap:8px;align-items:center;margin-top:8px}
+      .actions > *{flex:1}
+      .checkbox-row{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.95rem;margin:12px 0 6px}
+      .rules{font-size:.9rem;color:var(--muted);margin-top:8px;line-height:1.6}
+      .msg{min-height:1.6em;margin-bottom:6px}
+      .error{color:#ffd1d1;background:rgba(255,210,210,0.04);border-radius:10px;padding:8px;border:1px solid rgba(255,180,180,0.06)}
+      .success{color:#bff7d1;background:rgba(180,255,210,0.04);border-radius:10px;padding:8px;border:1px solid rgba(180,255,210,0.1)}
+      .ripple{position:absolute;border-radius:50%;transform:scale(0);opacity:.6;background:rgba(255,255,255,0.18);pointer-events:none}
+      @media(max-width:480px){body{padding:18px}.card{padding:18px 16px}}
+      @media (prefers-reduced-motion: reduce){.card{animation:none}.progress > span{transition:none}} 
     </style>
   </head>
   <body>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <main>
       <div class="card" role="region" aria-labelledby="insc2">
-        <h1 id="insc2">Inscription — Étape 2</h1>
-        <p class="lead">Choisis un mot de passe sécurisé et accepte les conditions.</p>
+        <div class="topbar">
+          <div class="brand">
+            <span class="mini-logo"><img src="./assets/tennis-rank-logo.webp" alt="Tennis Rank logo" /></span>
+            <span>Tennis Rank</span>
+          </div>
+          <div class="step-indicator"><span class="dot active"></span><span class="dot active"></span> <span>Étape 2 / 2</span></div>
+        </div>
 
-        <div id="msg" aria-live="polite" style="min-height:1.4em"></div>
+        <div class="progress"><span></span></div>
+
+        <h1 id="insc2">Sécurité</h1>
+        <p class="lead">Crée un mot de passe robuste et finalise la création du compte.</p>
+
+        <div id="msg" class="msg" aria-live="polite"></div>
 
         <form id="step2" novalidate>
           <div class="field">
@@ -38,69 +74,104 @@
             <input id="confirm" name="confirm" type="password" placeholder="Retaper le mot de passe" required />
           </div>
 
-          <label style="display:flex;gap:8px;align-items:center">
-            <input id="terms" type="checkbox" /> J'accepte les <a href="#" style="color:var(--accent)">conditions</a>
+          <label class="checkbox-row">
+            <input id="terms" type="checkbox" /> J'accepte les conditions
           </label>
 
-          <div class="rules">
-            Règles : au moins 8 caractères. Utilisez une combinaison de lettres et de chiffres pour plus de sécurité.
-          </div>
+          <div class="rules">Règles : au moins 8 caractères avec lettres + chiffres pour renforcer la sécurité.</div>
 
-          <div style="display:flex;gap:8px;margin-top:12px">
+          <div class="actions">
             <button type="submit" class="primary">Créer le compte</button>
-            <a href="signupt1.html" class="secondary" style="text-decoration:none;display:inline-flex;align-items:center;padding:8px 12px;border-radius:8px">Retour</a>
+            <a href="signupt1.html" class="secondary">Retour</a>
           </div>
         </form>
       </div>
     </main>
 
     <script>
+      // particle background
+      (function initParticles(){
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = innerWidth;
+        let h = canvas.height = innerHeight;
+        const particles = [];
+        const count = Math.round((w*h)/60000);
+        function rand(min,max){return Math.random()*(max-min)+min}
+        for(let i=0;i<count;i++) particles.push({x:rand(0,w),y:rand(0,h),r:rand(0.6,2.6),vx:rand(-0.05,0.05),vy:rand(-0.03,0.18),alpha:rand(0.06,0.22)});
+        function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight}
+        addEventListener('resize', resize);
+        function frame(){
+          ctx.clearRect(0,0,w,h);
+          for(const p of particles){
+            p.x += p.vx; p.y += p.vy;
+            if(p.y > h + 20) { p.y = -10; p.x = Math.random()*w }
+            if(p.x < -20) p.x = w+20; if(p.x > w+20) p.x = -20;
+            ctx.beginPath(); ctx.fillStyle = `rgba(185,205,255,${p.alpha})`; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+          }
+          requestAnimationFrame(frame);
+        }
+        if(!matchMedia('(prefers-reduced-motion: reduce)').matches) frame();
+      })();
+
+      function createRipple(e, el){
+        const rect = el.getBoundingClientRect();
+        const d = Math.max(rect.width, rect.height)*1.6;
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.width = ripple.style.height = d + 'px';
+        ripple.style.left = (e.clientX - rect.left - d/2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - d/2) + 'px';
+        el.appendChild(ripple);
+        ripple.animate([{transform:'scale(0)',opacity:0.45},{transform:'scale(1)',opacity:0}],{duration:520,easing:'cubic-bezier(.2,.9,.2,1)'}).onfinish=()=>ripple.remove();
+      }
+      document.addEventListener('pointerdown', (ev) => {
+        const el = ev.target.closest('.primary, .secondary');
+        if(el) createRipple(ev, el);
+      });
+
       const $ = (id) => document.getElementById(id);
       const msg = $('msg');
-
-      // On load, prefill email/pseudo if available
       document.addEventListener('DOMContentLoaded', () => {
         const email = localStorage.getItem('tr_signup_email');
         const pseudo = localStorage.getItem('tr_signup_pseudo');
         if (!email || !pseudo) {
-          msg.innerHTML = '<div style="color:#ffd1d1;padding:8px;border-radius:8px">Données manquantes de l\'étape précédente. Vous allez être redirigé.</div>';
+          msg.innerHTML = '<div class="error">Données manquantes. Vous allez être redirigé.</div>';
           setTimeout(() => window.location.href = 'signupt1.html', 1200);
         }
       });
 
       $('step2').addEventListener('submit', (e) => {
         e.preventDefault();
-        msg.textContent = '';
         const pw = $('password').value;
         const conf = $('confirm').value;
         const terms = $('terms').checked;
+        msg.textContent = '';
 
         if (pw.length < 8) {
-          msg.innerHTML = '<div style="color:#ffd1d1;padding:8px;border-radius:8px">Le mot de passe doit contenir au moins 8 caractères.</div>';
+          msg.innerHTML = '<div class="error">Le mot de passe doit contenir au moins 8 caractères.</div>';
           return;
         }
         if (pw !== conf) {
-          msg.innerHTML = '<div style="color:#ffd1d1;padding:8px;border-radius:8px">Les mots de passe ne correspondent pas.</div>';
+          msg.innerHTML = '<div class="error">Les mots de passe ne correspondent pas.</div>';
           return;
         }
         if (!terms) {
-          msg.innerHTML = '<div style="color:#ffd1d1;padding:8px;border-radius:8px">Vous devez accepter les conditions.</div>';
+          msg.innerHTML = '<div class="error">Vous devez accepter les conditions.</div>';
           return;
         }
 
-        // Récupérer données précédentes
         const fullname = localStorage.getItem('tr_signup_fullname') || '';
         const pseudo = localStorage.getItem('tr_signup_pseudo') || '';
         const email = localStorage.getItem('tr_signup_email') || '';
 
-        // Simuler création de compte (à remplacer par appel API)
         const user = { fullname, pseudo, email, passwordHash: btoa(pw), createdAt: new Date().toISOString() };
         localStorage.setItem('tr_user_' + email, JSON.stringify(user));
         localStorage.removeItem('tr_signup_fullname');
         localStorage.removeItem('tr_signup_pseudo');
         localStorage.removeItem('tr_signup_email');
 
-        msg.innerHTML = '<div style="color:#bff7d1;padding:8px;border-radius:8px">Compte créé ! Redirection…</div>';
+        msg.innerHTML = '<div class="success">Compte créé avec succès. Redirection…</div>';
         setTimeout(() => {
           localStorage.setItem('tr_pseudo', pseudo);
           localStorage.setItem('tr_email', email);
