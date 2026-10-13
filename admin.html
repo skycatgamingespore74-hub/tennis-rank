@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Portail admin — Tennis Rank</title>
+    <style>
+      :root{
+        color-scheme: dark;
+        --bg:#0b1020;
+        --panel: rgba(17, 24, 38, 0.8);
+        --panel-border: rgba(170,190,230,0.18);
+        --accent:#79a9ff;
+        --accent-2:#5d8dff;
+        --muted:#aab6d5;
+        --good:#bff7d1;
+        --warn:#ffd9a8;
+        --danger:#ffb4b4;
+      }
+      *{box-sizing:border-box}
+      body{
+        margin:0;
+        min-height:100vh;
+        display:grid;
+        place-items:center;
+        background:radial-gradient(circle at 20% 0%, #243d72, #0b1020 60%);
+        color:#f4f7ff;
+        font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+        padding:24px;
+      }
+      .card{
+        width:min(100%, 760px);
+        background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,.08));
+        border:1px solid var(--panel-border);
+        border-radius:22px;
+        box-shadow:0 18px 44px rgba(0,0,0,.38);
+        padding:26px;
+      }
+      .topbar{
+        display:flex; justify-content:space-between; align-items:center; gap:16px;
+        margin-bottom:18px;
+      }
+      .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.04em}
+      .brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#081126;font-weight:900}
+      .logout{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:#fff;text-decoration:none;font-weight:700}
+      h1{margin:8px 0 8px;font-size:clamp(1.8rem, 5vw, 2.8rem)}
+      .lead{color:var(--muted);margin:0 0 22px}
+      .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:16px}
+      .tile{
+        padding:18px 16px;border-radius:16px;border:1px solid rgba(170,190,230,0.12);
+        background:rgba(255,255,255,0.02);min-height:120px;
+      }
+      .tile .kicker{display:block;color:#8fe0d6;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;margin-bottom:10px}
+      .tile strong{font-size:1.1rem;display:block}
+      .tile small{color:var(--muted);display:block;margin-top:10px;line-height:1.5}
+      .panel{
+        margin-top:18px;border:1px solid rgba(170,190,230,0.12);background:rgba(255,255,255,0.015);border-radius:16px;padding:18px;
+      }
+      .msg{padding:12px 14px;border-radius:12px;border:1px solid rgba(191,247,209,0.18);background:rgba(191,247,209,0.06);color:var(--good);margin-bottom:12px}
+      .field{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+      label{font-weight:700;color:#dbe8ff}
+      input{
+        width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(170,190,230,0.12);
+        background:linear-gradient(180deg, rgba(12,18,32,0.52), rgba(12,18,32,0.42));
+        color:#fff;font-size:1rem;outline:none;
+      }
+      .primary-btn{margin-top:8px;padding:12px 18px;border:none;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#081126;font-weight:800;cursor:pointer}
+      .error{color:#ffd1d1;background:rgba(255,210,210,0.04);border:1px solid rgba(255,180,180,0.06);padding:10px 12px;border-radius:10px;margin-top:12px}
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="topbar">
+        <div class="brand"><span class="brand-mark">T</span> Tennis Rank Admin</div>
+        <a class="logout" href="Connect.html">Déconnexion</a>
+      </div>
+
+      <h1>Portail d’administration</h1>
+      <p class="lead">Bienvenue dans votre espace de gestion.</p>
+
+      <div class="msg">Session admin active</div>
+
+      <div class="grid">
+        <div class="tile">
+          <span class="kicker">Utilisateurs</span>
+          <strong>128</strong>
+          <small>Comptes enregistrés et actifs</small>
+        </div>
+        <div class="tile">
+          <span class="kicker">Évaluations</span>
+          <strong>39</strong>
+          <small>Tests de niveau en cours</small>
+        </div>
+        <div class="tile">
+          <span class="kicker">Progression</span>
+          <strong>+18%</strong>
+          <small>Amélioration moyenne de la semaine</small>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 style="margin:0 0 14px;">Connexion admin</h2>
+        <div id="adminMsg"></div>
+        <form id="adminForm">
+          <div class="field">
+            <label for="adminId">Identifiant</label>
+            <input id="adminId" type="text" value="skycat74" autocomplete="username" />
+          </div>
+          <div class="field">
+            <label for="adminPassword">Mot de passe</label>
+            <input id="adminPassword" type="password" value="Majoly.7473" autocomplete="current-password" />
+          </div>
+          <button class="primary-btn" type="submit">Valider</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const ADMIN_CREDENTIALS = {
+        'skycat74': 'Majoly.7473',
+        'adm:tennisdev': '1515'
+      };
+
+      const adminForm = document.getElementById('adminForm');
+      const adminMsg = document.getElementById('adminMsg');
+
+      adminForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('adminId').value.trim();
+        const pass = document.getElementById('adminPassword').value;
+
+        if (ADMIN_CREDENTIALS[id] && ADMIN_CREDENTIALS[id] === pass) {
+          localStorage.setItem('tr_admin_logged_in', '1');
+          adminMsg.innerHTML = '<div class="msg" style="background:rgba(191,247,209,0.06);color:var(--good)">Connexion administrateur validée.</div>';
+          return;
+        }
+
+        adminMsg.innerHTML = '<div class="error">Identifiant ou mot de passe incorrect.</div>';
+      });
+
+      const isQuickAccessAdmin = localStorage.getItem('tr_admin_redirect') === '1';
+      if (isQuickAccessAdmin) {
+        document.getElementById('adminId').value = 'skycat74';
+        document.getElementById('adminPassword').value = 'Majoly.7473';
+      }
+    </script>
+  </body>
+</html>
