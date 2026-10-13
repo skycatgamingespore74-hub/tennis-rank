@@ -1,27 +1,31 @@
 <!doctype html>
 <html>
 <head>
-<title>tennis-rank</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tennis-rank - Connexion</title>
 <style>
 body {
 background-color: lightblue;
+font-family: Arial, sans-serif;
+text-align: center;
+padding: 20px;
+margin: 0;
 }
-
 .connect {
 color: green;
 font-weight: bold;
 }
-
 .form {
 background-color: white;
 border-radius: 16px;
 border: 1px solid lightgrey;
+width: 90%;
+max-width: 350px;
+padding: 12px;
+font-size: 16px;
+margin: 5px auto;
+display: block;
 }
-.text {
-color: white;
-}
-
-
 #lapepitegivre {
 background-color: green;
 border: solid gold 1px;
@@ -29,46 +33,67 @@ border-radius: 5px;
 font-weight: bold;
 font-family: arial;
 color: black;
-padding : 5px;
+padding: 12px 30px;
+font-size: 17px;
+cursor: pointer;
+margin-top: 10px;
 }
-
-.tt {
-font-weight: bold;
-font-family: arial;
-color: black;
-margin-top: 2px;
-}
-
 #logo {
 border: solid 1px black;
 border-radius: 25px;
 }
-#Google {
-Padding: 10px;
-text-align: center;
+.google-zone {
+margin-top: 15px;
 }
-#se {
-text-align: center;
-}
-
 </style>
 </head>
 <body>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <img src="https://skycatgamingespore74-hub.github.io/tennis-rank/assets/tennis-rank-logo.webp"
 alt="image indisponible" height="100" width="100" id="logo">
+
 <h1 class="connect">se connecter</h1>
-<p>connecter vous pour acceder a vos apprentissages</p>
+<p>connecte toi pour acceder a tes apprentissages</p>
+
 <p>id/email:</p>
-<textarea class="form"></textarea>
+<input type="text" class="form" placeholder="ton email ou id">
 <br>
 <p>mot de passe:</p>
-<textarea class="form"></textarea>
+<input type="password" class="form" placeholder="mot de passe">
 <br>
-<button id="lapepitegivre"><a href="https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html" class="tt">se connecter</a></button>
+
+<button id="lapepitegivre" onclick="location.href='https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html'">se connecter</button>
+
 <p>ou avec</p>
-<button><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" id="Google" alt="image indisponible" width="18"><a href="https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html" id="se">
-Se connecter avec Google</a></button>
-<p>vous n'avez pas de compte ? <a href="https://skycatgamingespore74-hub.github.io/tennis-rank/signupt1.html">cliquer ici</a></p>
+
+<div id="g_id_onload"
+     data-client_id="876964218380-ur7th5dq7kbqaut0pjt6c54mkjma313c.apps.googleusercontent.com"
+     data-callback="handleConnectGoogle">
+</div>
+<div class="google-zone">
+  <div class="g_id_signin"
+       data-type="standard"
+       data-shape="pill"
+       data-theme="filled_blue"
+       data-text="signin_with"
+       data-size="large"
+       data-logo_alignment="left">
+  </div>
+</div>
+
+<p>vous n'avez pas de compte? <a href="https://skycatgamingespore74-hub.github.io/tennis-rank/signupt1.html">cliquer ici</a></p>
+
+<script>
+function handleConnectGoogle(response) {
+  const data = JSON.parse(atob(response.credential.split('.')[1]));
+  localStorage.setItem("tr_pseudo", data.name);
+  localStorage.setItem("tr_email", data.email);
+  alert("Connecté en tant que " + data.name);
+  window.location.href = "https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html";
+}
+</script>
+
 </body>
 </html>
-
