@@ -5,56 +5,392 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Tennis Rank — En développement</title>
     <style>
-      :root{color-scheme:dark;font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial}
-      body{margin:0;min-height:100vh;background:linear-gradient(180deg,#0b1020,#071126);color:#f6fbff;display:grid;place-items:center;padding:24px}
-      .card{max-width:720px;width:100%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.06));border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.03);text-align:center}
-      h1{margin:0 0 8px;font-size:1.8rem}
-      p.lead{color:#c4d3f3;margin:0 0 18px}
-      .actions{display:flex;gap:12px;justify-content:center;margin-top:18px}
-      .btn{padding:12px 16px;border-radius:12px;border:none;cursor:pointer;font-weight:700}
-      .primary{background:linear-gradient(90deg,#79a9ff,#5d8dff);color:#081126}
-      .linkish{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#e6f0ff}
-      .small{color:#9fb0da;margin-top:12px}
-      .log{margin-top:16px;text-align:left;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;color:#dfe8ff;font-size:.95rem;max-height:180px;overflow:auto}
+      :root{
+        color-scheme: dark;
+        --bg: #0b1020;
+        --bg-2: #071126;
+        --card: rgba(14, 20, 35, 0.72);
+        --card-strong: rgba(19, 27, 45, 0.9);
+        --line: rgba(180, 200, 255, 0.12);
+        --text: #edf4ff;
+        --muted: #a9bfdc;
+        --accent-1: #79a9ff;
+        --accent-2: #5d8dff;
+        --success: #7fe3b8;
+        --warning: #ffd986;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 0%, rgba(60, 90, 170, 0.35), transparent 32%),
+          radial-gradient(circle at 80% 20%, rgba(89, 125, 255, 0.16), transparent 26%),
+          linear-gradient(180deg, var(--bg), var(--bg-2));
+        overflow: hidden;
+      }
+
+      .ambient {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(50px);
+        opacity: 0.35;
+        animation: drift 12s ease-in-out infinite alternate;
+      }
+
+      .orb.one {
+        width: 240px; height: 240px;
+        background: rgba(121, 169, 255, 0.22);
+        top: 8%; left: 10%;
+      }
+
+      .orb.two {
+        width: 280px; height: 280px;
+        background: rgba(93, 141, 255, 0.12);
+        right: 8%; top: 18%;
+        animation-delay: 1.5s;
+      }
+
+      .orb.three {
+        width: 220px; height: 220px;
+        background: rgba(108, 214, 255, 0.10);
+        bottom: 6%; left: 30%;
+        animation-delay: 3s;
+      }
+
+      @keyframes drift {
+        0% { transform: translate3d(0, 0, 0) scale(1); }
+        100% { transform: translate3d(18px, -16px, 0) scale(1.08); }
+      }
+
+      .card {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 760px);
+        padding: 28px 24px 22px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(18, 28, 45, 0.8), rgba(6, 12, 24, 0.9));
+        box-shadow: 0 28px 70px rgba(0,0,0,0.42);
+        backdrop-filter: blur(12px);
+      }
+
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(127, 227, 184, 0.1);
+        border: 1px solid rgba(127, 227, 184, 0.2);
+        color: var(--success);
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success);
+        box-shadow: 0 0 18px rgba(127, 227, 184, 0.9);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: #e8f0ff;
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+        box-shadow: 0 14px 28px rgba(93, 141, 255, 0.25);
+      }
+
+      .brand-mark img {
+        width: 28px; height: 28px; object-fit: cover; border-radius: 9px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 18px;
+        align-items: center;
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(2.1rem, 5vw, 3.5rem);
+        line-height: 1;
+        letter-spacing: -0.06em;
+      }
+
+      .lead {
+        margin: 0 0 20px;
+        color: var(--muted);
+        font-size: 1.03rem;
+        line-height: 1.7;
+        max-width: 60ch;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+
+      button, .link-btn {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        font: inherit;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 800;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn.primary {
+        color: #07152a;
+        background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+        box-shadow: 0 12px 28px rgba(95, 137, 255, 0.28);
+      }
+
+      .btn.secondary {
+        color: var(--text);
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .meta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .pill {
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.04);
+      }
+
+      .panel {
+        padding: 18px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        border: 1px solid var(--line);
+      }
+
+      .panel-title {
+        margin: 0 0 14px;
+        font-size: 0.78rem;
+        letter-spacing: 0.16em;
+        color: var(--muted);
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 12px;
+        background: rgba(10,15,27,0.45);
+      }
+
+      .label {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .value {
+        font-weight: 700;
+        font-size: 0.92rem;
+      }
+
+      .progress-wrap {
+        margin-top: 18px;
+      }
+
+      .progress-head {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.04);
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        width: 68%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+        box-shadow: 0 0 20px rgba(93,141,255,0.24);
+      }
+
+      .small-note {
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      @media (max-width: 720px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .top {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .card { padding: 22px 18px; }
+      }
     </style>
   </head>
   <body>
-    <div class="card" role="main" aria-labelledby="dev-title">
-      <h1 id="dev-title">En développement</h1>
-      <p class="lead">Cette section de l'application est en cours d'amélioration pour une expérience mobile plus fluide. Merci pour ta patience !</p>
-
-      <div class="actions" role="navigation">
-        <button class="btn primary" onclick="goHome()">Retour à l'accueil</button>
-        <button class="btn linkish" onclick="tryAgain()">Réessayer</button>
-        <button class="btn linkish" onclick="report()">Signaler un problème</button>
-      </div>
-
-      <p class="small">Si tu veux tester une version, ouvre l'outil de développement ou contacte le développeur.</p>
-
-      <div class="log" id="log" aria-live="polite">
-        <strong>Info :</strong>
-        <ul>
-          <li>Utilisateur connecté (localStorage) : <span id="userInfo">—</span></li>
-          <li>Temps : <span id="now">—</span></li>
-        </ul>
-      </div>
+    <div class="ambient" aria-hidden="true">
+      <div class="orb one"></div>
+      <div class="orb two"></div>
+      <div class="orb three"></div>
     </div>
 
+    <main class="card" role="main" aria-labelledby="dev-title">
+      <div class="top">
+        <div class="brand">
+          <span class="brand-mark"><img src="./assets/tennis-rank-logo.webp" alt="Tennis Rank" /></span>
+          <span>Tennis Rank</span>
+        </div>
+
+        <div class="status">
+          <span class="status-dot"></span>
+          <span>En développement</span>
+        </div>
+      </div>
+
+      <div class="hero">
+        <section>
+          <h1 id="dev-title">La prochaine étape arrive.</h1>
+          <p class="lead">
+            Cette section de l’application est actuellement en cours de finition pour offrir une expérience plus fluide,
+            plus rapide et plus premium sur mobile. Merci pour ta patience et ton soutien.
+          </p>
+
+          <div class="actions">
+            <button class="btn primary" type="button" onclick="goHome()">Retour à l'accueil</button>
+            <button class="btn secondary" type="button" onclick="tryAgain()">Réessayer</button>
+          </div>
+
+          <div class="meta">
+            <span class="pill">Build: 0.9.4</span>
+            <span class="pill">Mode: Preview</span>
+            <span class="pill">Statut: stable test</span>
+          </div>
+        </section>
+
+        <aside class="panel" aria-label="Résumé de l'état de l'application">
+          <p class="panel-title">État du module</p>
+          <div class="stack">
+            <div class="item">
+              <span class="label">Connexion</span>
+              <span class="value">OK</span>
+            </div>
+            <div class="item">
+              <span class="label">Inscription</span>
+              <span class="value">Préparation</span>
+            </div>
+            <div class="item">
+              <span class="label">Dashboard</span>
+              <span class="value">En cours</span>
+            </div>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-head">
+              <span>Progression</span>
+              <span>68%</span>
+            </div>
+            <div class="progress-bar" aria-hidden="true">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="small-note">Le rendu final sera optimisé pour mobile et aligné avec le design de l'application.</div>
+        </aside>
+      </div>
+    </main>
+
     <script>
-      function goHome(){ window.location.href = 'index.html' || 'Connect.html'; }
-      function tryAgain(){ location.reload(); }
-      function report(){
-        const subject = encodeURIComponent('Rapport - Tennis Rank');
-        const body = encodeURIComponent('Bonjour,\n\nJe signale un problème sur la page en développement. Décrivez le problème :\n\n');
-        window.location.href = `mailto:dev@exemple.com?subject=${subject}&body=${body}`;
+      function goHome() {
+        window.location.href = 'Connect.html';
       }
 
-      // Affiche info utile (debug)
-      const userInfoEl = document.getElementById('userInfo');
-      const nowEl = document.getElementById('now');
-      const user = localStorage.getItem('tr_pseudo') || localStorage.getItem('tr_email') || 'non connecté';
-      userInfoEl.textContent = user;
-      nowEl.textContent = new Date().toLocaleString();
+      function tryAgain() {
+        window.location.reload();
+      }
     </script>
   </body>
 </html>
