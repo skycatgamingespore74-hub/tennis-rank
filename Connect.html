@@ -1,221 +1,261 @@
 <!doctype html>
 <html lang="fr">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>tennis-rank - Connexion</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tennis Rank — Connexion</title>
     <style>
-      :root {
+      :root{
         color-scheme: dark;
-        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-        background: #0b1020;
-        color: #f4f7ff;
+        --bg: #0b1020;
+        --card-from: rgba(255,255,255,0.03);
+        --card-to: rgba(0,0,0,0.08);
+        --accent-1: #79a9ff;
+        --accent-2: #5d8dff;
+        --muted: #aab6d5;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       }
-
-      * { box-sizing: border-box; }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        padding: 24px;
-        background: radial-gradient(circle at 20% 0%, #243d72, #0b1020 60%);
-        display: grid;
-        place-items: center;
+      *{box-sizing:border-box}
+      body{
+        margin:0;
+        min-height:100vh;
+        background:radial-gradient(circle at 20% 0%, #243d72, var(--bg) 60%);
+        color:#f4f7ff;
+        display:grid;
+        place-items:center;
+        padding:24px;
+        overflow:hidden;
       }
-
-      main {
-        width: min(100%, 430px);
+      main{width:min(100%,460px);z-index:2}
+      .card{
+        width:100%;
+        background:linear-gradient(180deg,var(--card-from),var(--card-to));
+        border:1px solid rgba(170,190,230,0.18);
+        border-radius:18px;
+        padding:22px;
+        box-shadow:0 18px 44px rgba(0,0,0,.38);
+        backdrop-filter: blur(6px);
+        transform: translateY(0);
+        transition: transform .6s cubic-bezier(.2,.9,.2,1), opacity .4s;
       }
-
-      .card {
-        width: 100%;
-        background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.08));
-        border: 1px solid rgba(170, 190, 230, 0.18);
-        border-radius: 18px;
-        padding: 22px 20px;
-        box-shadow: 0 18px 44px rgba(0,0,0,.38);
+      .logo{display:block;width:96px;height:96px;margin:0 auto 14px;border-radius:18px;object-fit:cover}
+      .badge{color:#8fe0d6;font-weight:800;letter-spacing:.12em;text-transform:uppercase;text-align:center;font-size:.75rem;margin:0 0 8px}
+      h1{text-align:center;margin:0 0 8px;font-size:clamp(1.6rem,6vw,2.2rem)}
+      .lead{text-align:center;color:var(--muted);margin:0 0 18px}
+      form .field{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+      label{font-weight:700;color:#dbe8ff;font-size:.95rem}
+      input[type="text"],input[type="email"],input[type="password"]{
+        padding:12px 14px;border-radius:12px;border:1px solid rgba(170,190,230,0.12);
+        background:rgba(12,18,32,0.45);color:inherit;font-size:1rem;outline:none;
       }
+      input::placeholder{color:#9fb0da}
+      .controls{display:flex;gap:8px;align-items:center;justify-content:space-between}
+      .primary-btn{width:100%;padding:13px;border-radius:999px;border:none;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#081126;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(95,137,255,.28)}
+      .secondary{width:100%;padding:10px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(170,190,230,0.10);color:#dfe8ff;font-weight:700;cursor:pointer}
+      .small{font-size:.9rem;color:var(--muted);text-align:center;margin-top:12px}
+      .divider{text-align:center;color:var(--muted);margin:14px 0}
 
-      .logo {
-        display: block;
-        width: 100px;
-        height: 100px;
-        margin: 0 auto 18px;
-        border-radius: 24px;
-        object-fit: cover;
-        box-shadow: 0 18px 44px rgba(0,0,0,.32);
-      }
+      /* Google button improvements */
+      .google-wrap{display:flex;justify-content:center;align-items:center;position:relative}
+      .google-bg{position:absolute;width:160px;height:56px;border-radius:999px;background:linear-gradient(90deg, rgba(121,169,255,0.12), rgba(93,141,255,0.08));filter:blur(8px);opacity:0.9;transform-origin:center;animation:glow 2.8s ease-in-out infinite}
+      @keyframes glow{0%{transform:scale(.95)}50%{transform:scale(1.06)}100%{transform:scale(.95)}}
+      /* small animated accent behind button */
+      .google-btn-custom{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#ffffff;font-weight:700;backdrop-filter: blur(4px);z-index:1}
+      .google-logo{width:20px;height:20px;border-radius:4px;display:inline-block;background-image:url('./assets/google-icon.png');background-size:contain;background-repeat:no-repeat}
+      .google-text{font-size:0.95rem}
 
-      .badge {
-        margin: 0 0 10px;
-        color: #8fe0d6;
-        font-size: .75rem;
-        font-weight: 800;
-        letter-spacing: .14em;
-        text-transform: uppercase;
-        text-align: center;
-      }
+      .error{color:#ffd1d1;background:rgba(255,210,210,0.04);border-radius:10px;padding:8px;margin-bottom:8px;border:1px solid rgba(255,180,180,0.06)}
+      .password-row{display:flex;gap:8px}
+      .toggle-pass{padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
 
-      h1 {
-        margin: 0 0 8px;
-        text-align: center;
-        font-size: clamp(2rem, 7vw, 2.7rem);
-        line-height: 1;
-        letter-spacing: -.05em;
-        color: #fff;
-      }
+      /* SPLASH / APP START ANIMATION */
+      .splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(36,61,114,0.9),rgba(11,16,32,0.95));z-index:5}
+      .splash .logo-shell{width:160px;height:160px;border-radius:28px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:0 20px 50px rgba(17,25,48,0.6);animation:logo-pop .9s cubic-bezier(.2,.9,.2,1) forwards}
+      .splash img{width:100px;height:100px;object-fit:cover;border-radius:18px;transform:translateY(0)}
+      @keyframes logo-pop{0%{transform:scale(.4) rotate(-6deg);opacity:0}60%{transform:scale(1.08) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+      .splash.hide{animation:fadeOut .6s ease forwards;animation-delay:.9s}
+      @keyframes fadeOut{to{opacity:0;visibility:hidden;transform:translateY(-8px)}}
 
-      .lead {
-        margin: 0 0 18px;
-        text-align: center;
-        color: #aab6d5;
-        font-size: 1.02rem;
-        line-height: 1.6;
-      }
-
-      .field {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-bottom: 14px;
-      }
-
-      label {
-        color: #dbe8ff;
-        font-size: .9rem;
-        font-weight: 700;
-      }
-
-      input[type='text'],
-      input[type='password'] {
-        width: 100%;
-        padding: 12px 14px;
-        border-radius: 12px;
-        border: 1px solid rgba(170, 190, 230, 0.18);
-        background: rgba(12, 18, 32, 0.45);
-        color: #f4f7ff;
-        font-size: 1rem;
-        outline: none;
-      }
-
-      input::placeholder {
-        color: #9fb0da;
-      }
-
-      button {
-        border: none;
-        cursor: pointer;
-        font: inherit;
-      }
-
-      .primary-btn {
-        display: inline-block;
-        width: 100%;
-        margin-top: 8px;
-        padding: 13px 18px;
-        border-radius: 999px;
-        background: linear-gradient(90deg, #79a9ff, #5d8dff);
-        color: #081126;
-        font-weight: 800;
-        box-shadow: 0 10px 24px rgba(95, 137, 255, 0.3);
-      }
-
-      .secondary-action {
-        display: block;
-        margin-top: 12px;
-        width: 100%;
-        padding: 10px 14px;
-        border-radius: 12px;
-        background: rgba(255,255,255,0.02);
-        border: 1px solid rgba(170, 190, 230, 0.15);
-        color: #dfe8ff;
-        font-weight: 700;
-      }
-
-      .divider {
-        margin: 18px 0 10px;
-        color: #aab6d5;
-        text-align: center;
-      }
-
-      .google-zone {
-        display: flex;
-        justify-content: center;
-        margin: 10px 0 12px;
-      }
-
-      .signup {
-        display: block;
-        margin-top: 14px;
-        text-align: center;
-        color: #aab6d5;
-        font-size: .95rem;
-      }
-
-      .signup a {
-        color: #79a9ff;
-        text-decoration: none;
-        font-weight: 700;
-      }
-
-      @media (max-width: 480px) {
-        body { padding: 18px 14px; }
-        .card { padding: 18px 16px; }
-      }
+      @media(max-width:480px){body{padding:18px} .card{padding:16px}}
     </style>
   </head>
   <body>
+    <div class="splash" id="splash" role="img" aria-hidden="true">
+      <div class="logo-shell">
+        <img src="./assets/tennis-rank-logo.webp" alt="Tennis Rank" />
+      </div>
+    </div>
+
     <main>
-      <div class="card">
+      <div class="card" role="region" aria-labelledby="login-title">
         <img class="logo" src="./assets/tennis-rank-logo.webp" alt="Logo Tennis Rank" />
         <p class="badge">Tennis Rank · Tennis Levels</p>
-        <h1>Se connecter</h1>
-        <p class="lead">Connecte-toi pour accéder à tes apprentissages.</p>
+        <h1 id="login-title">Se connecter</h1>
+        <p class="lead">Accède à tes apprentissages et ton suivi.</p>
 
-        <div class="field">
-          <label for="email">ID / email</label>
-          <input id="email" type="text" placeholder="ton email ou id" />
-        </div>
+        <div id="msg" aria-live="polite" style="min-height:1.5em"></div>
 
-        <div class="field">
-          <label for="password">Mot de passe</label>
-          <input id="password" type="password" placeholder="mot de passe" />
-        </div>
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label for="email">ID / email</label>
+            <input id="email" name="email" type="email" placeholder="ton email" required autocomplete="email" />
+          </div>
 
-        <button class="primary-btn" id="lapepitegivre" onclick="location.href='https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html'">Se connecter</button>
-        <button type="button" class="secondary-action" onclick="location.href='https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html'">Mot de passe oublié</button>
+          <div class="field">
+            <label for="password">Mot de passe</label>
+            <div class="password-row">
+              <input id="password" name="password" type="password" placeholder="mot de passe" required autocomplete="current-password" style="flex:1" />
+              <button type="button" class="toggle-pass" id="togglePass" aria-pressed="false" title="Afficher / masquer le mot de passe">Afficher</button>
+            </div>
+          </div>
+
+          <div class="controls">
+            <label class="inline"><input id="remember" type="checkbox" /> Se souvenir</label>
+            <button type="button" class="secondary" id="forgotBtn">Mot de passe oublié</button>
+          </div>
+
+          <button class="primary-btn" type="submit" id="signInBtn">Se connecter</button>
+        </form>
 
         <p class="divider">ou avec</p>
 
-        <div id="g_id_onload"
-             data-client_id="876964218380-ur7th5dq7kbqaut0pjt6c54mkjma313c.apps.googleusercontent.com"
-             data-callback="handleConnectGoogle">
-        </div>
-
         <div class="google-zone">
-          <div class="g_id_signin"
-               data-type="standard"
-               data-shape="pill"
-               data-theme="filled_blue"
-               data-text="signin_with"
-               data-size="large"
-               data-logo_alignment="left">
+          <div class="google-wrap">
+            <div class="google-bg" aria-hidden="true"></div>
+            <!-- We'll render the official GSI button inside #googleBtn when the SDK is available. If not, we show a graceful custom button. -->
+            <div id="googleBtnContainer"></div>
+            <button id="googleFallback" class="google-btn-custom" type="button" style="display:none">
+              <span class="google-logo" aria-hidden="true"></span>
+              <span class="google-text">Se connecter avec Google</span>
+            </button>
           </div>
         </div>
 
-        <p class="signup">Vous n'avez pas de compte ? <a href="https://skycatgamingespore74-hub.github.io/tennis-rank/signupt1.html">Cliquer ici</a></p>
+        <p class="small">Pas encore de compte ? <a href="signupt1.html">Créer un compte</a></p>
       </div>
     </main>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-      function handleConnectGoogle(response) {
-        const data = JSON.parse(atob(response.credential.split('.')[1]));
-        localStorage.setItem('tr_pseudo', data.name);
-        localStorage.setItem('tr_email', data.email);
-        alert('Connecté en tant que ' + data.name);
-        window.location.href = 'https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html';
+      // UI helpers
+      const $ = (id) => document.getElementById(id);
+      const msg = $('msg');
+
+      // Splash handling
+      function hideSplash() {
+        const s = $('splash');
+        if (!s) return;
+        s.classList.add('hide');
+        setTimeout(() => { s.style.display = 'none'; }, 1200);
       }
+      // Hide splash after the logo animation completes
+      window.addEventListener('load', () => setTimeout(hideSplash, 1100));
+
+      // Toggle password visibility
+      $('togglePass').addEventListener('click', () => {
+        const p = $('password');
+        const shown = p.type === 'text';
+        p.type = shown ? 'password' : 'text';
+        $('togglePass').textContent = shown ? 'Afficher' : 'Masquer';
+        $('togglePass').setAttribute('aria-pressed', String(!shown));
+      });
+
+      // Forgot password button (redirect to improved page)
+      $('forgotBtn').addEventListener('click', () => {
+        window.location.href = 'deverror.html'; // améliorer si vous avez une vraie page reset
+      });
+
+      // Form submit (simulation)
+      $('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        msg.textContent = '';
+        const email = $('email').value.trim();
+        const password = $('password').value;
+        if (!email || !password) {
+          msg.innerHTML = '<div class="error">Merci de renseigner email et mot de passe.</div>';
+          return;
+        }
+
+        // Simule vérification — remplacez par appel réel à backend
+        localStorage.setItem('tr_email', email);
+        localStorage.setItem('tr_pseudo', email.split('@')[0] || 'Utilisateur');
+        if ($('remember').checked) localStorage.setItem('tr_remember', '1');
+        msg.innerHTML = '<div style="color:#bff7d1;padding:8px;border-radius:8px">Connexion réussie — redirection…</div>';
+
+        setTimeout(() => {
+          window.location.href = 'deverror.html'; // ou la page d'accueil réelle
+        }, 800);
+      });
+
+      // Google Identity: try to render official button; if SDK not ready within timeout, show fallback custom button
+      const CLIENT_ID = '876964218380-ur7th5dq7kbqaut0pjt6c54mkjma313c.apps.googleusercontent.com';
+
+      function handleConnectGoogle(response) {
+        try {
+          const data = JSON.parse(atob(response.credential.split('.')[1]));
+          localStorage.setItem('tr_pseudo', data.name);
+          localStorage.setItem('tr_email', data.email);
+          alert('Connecté en tant que ' + data.name);
+          window.location.href = 'deverror.html';
+        } catch (err) {
+          alert('Erreur de connexion Google');
+        }
+      }
+      window.handleConnectGoogle = handleConnectGoogle;
+
+      function renderGsiButton() {
+        if (!window.google || !google.accounts || !google.accounts.id) return false;
+        // initialize (idempotent)
+        try {
+          google.accounts.id.initialize({
+            client_id: CLIENT_ID,
+            callback: handleConnectGoogle
+          });
+          // Render the official button into our container with a neutral theme so it matches UI
+          const container = $('googleBtnContainer');
+          container.innerHTML = '';
+          const btn = document.createElement('div');
+          btn.id = 'gsiButton';
+          container.appendChild(btn);
+          google.accounts.id.renderButton(btn, {
+            theme: 'filled_blue',
+            size: 'large',
+            type: 'standard',
+            shape: 'pill',
+            text: 'signin_with'
+          });
+          // hide fallback
+          $('googleFallback').style.display = 'none';
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      // Fallback behaviour if SDK doesn't load
+      let gsiLoaded = false;
+      function tryRenderGsi(retries = 20) {
+        if (renderGsiButton()) { gsiLoaded = true; return; }
+        if (retries <= 0) { showGoogleFallback(); return; }
+        setTimeout(() => tryRenderGsi(retries - 1), 150);
+      }
+
+      function showGoogleFallback() {
+        const fb = $('googleFallback');
+        fb.style.display = 'inline-flex';
+        fb.addEventListener('click', () => {
+          // Simulated sign-in for fallback/demo
+          localStorage.setItem('tr_pseudo', 'GoogleUser');
+          localStorage.setItem('tr_email', 'googleuser@example.com');
+          alert('Connecté via Google (simulation)');
+          window.location.href = 'deverror.html';
+        });
+      }
+
+      // Start trying after the SDK script has been parsed
+      document.addEventListener('DOMContentLoaded', () => {
+        tryRenderGsi();
+      });
     </script>
   </body>
 </html>

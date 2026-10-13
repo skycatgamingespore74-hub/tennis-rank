@@ -1,105 +1,82 @@
 <!doctype html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>tennis-rank - S'inscrire</title>
-<style>
-body {
-background-color: lightblue;
-font-family: Arial, sans-serif;
-text-align: center;
-padding: 20px;
-}
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tennis Rank — Inscription (1/2)</title>
+    <style>
+      :root{color-scheme:dark;font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;--muted:#aab6d5;--accent:#79a9ff}
+      body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%, #243d72,#0b1020 60%);color:#f4f7ff;display:grid;place-items:center;padding:24px}
+      main{width:min(100%,520px)}
+      .card{padding:20px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.06));border:1px solid rgba(170,190,230,0.12)}
+      h1{margin:0 0 8px}
+      p.lead{margin:0 0 12px;color:var(--muted)}
+      .field{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+      input{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:rgba(12,18,32,0.45);color:inherit}
+      .row{display:flex;gap:8px}
+      .primary{background:linear-gradient(90deg,var(--accent),#5d8dff);padding:12px;border-radius:999px;border:none;color:#081126;font-weight:800;cursor:pointer}
+      .secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:10px;cursor:pointer;color:var(--muted)}
+      .small{color:var(--muted);font-size:.95rem}
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="card" role="region" aria-labelledby="insc1">
+        <h1 id="insc1">Inscription — Étape 1</h1>
+        <p class="lead">Renseigne ton nom et ton email. Nous te demanderons un mot de passe à l'étape suivante.</p>
 
-.connect {
-color: green;
-font-weight: bold;
-}
+        <div id="msg" aria-live="polite" style="min-height:1.4em"></div>
 
-.form {
-background-color: white;
-border-radius: 16px;
-border: 1px solid lightgrey;
-width: 90%;
-max-width: 400px;
-padding: 10px;
-font-size: 16px;
-}
+        <form id="step1" novalidate>
+          <div class="field">
+            <label for="fullname">Nom complet</label>
+            <input id="fullname" name="fullname" type="text" placeholder="Ex: Jean Dupont" required />
+          </div>
 
-#lapepitegivre {
-background-color: green;
-border: solid gold 1px;
-border-radius: 5px;
-font-weight: bold;
-font-family: arial;
-color: black;
-padding: 12px 30px;
-font-size: 18px;
-cursor: pointer;
-margin-top: 10px;
-}
+          <div class="field">
+            <label for="pseudo">Pseudo (affiché)</label>
+            <input id="pseudo" name="pseudo" type="text" placeholder="Ex: JeanD" required />
+          </div>
 
-#logo {
-border: solid 1px black;
-border-radius: 25px;
-}
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="exemple@domaine.com" required />
+          </div>
 
-.google-btn {
-margin: 15px auto;
-display: inline-block;
-}
-</style>
-</head>
-<body>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button type="submit" class="primary">Étape suivante</button>
+            <a href="Connect.html" class="secondary" style="text-decoration:none;display:inline-flex;align-items:center;padding:8px 12px;border-radius:8px">Retour</a>
+          </div>
+        </form>
+      </div>
+    </main>
 
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      $('step1').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fullname = $('fullname').value.trim();
+        const pseudo = $('pseudo').value.trim();
+        const email = $('email').value.trim();
+        const msg = document.getElementById('msg');
+        msg.textContent = '';
 
-<img src="https://skycatgamingespore74-hub.github.io/tennis-rank/assets/tennis-rank-logo.webp"
-alt="image indisponible" height="100" width="100" id="logo">
+        if (!fullname || !pseudo || !email) {
+          msg.innerHTML = '<div style="color:#ffd1d1;padding:8px;border-radius:8px">Tous les champs sont requis.</div>';
+          return;
+        }
+        // Simple email validation
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          msg.innerHTML = '<div style="color:#ffd1d1;padding:8px;border-radius:8px">Email invalide.</div>';
+          return;
+        }
 
-<h1 class="connect">S'inscrire</h1>
-<p>Inscris-toi pour découvrir l'univers du tennis</p>
-
-<p>email:</p>
-<input type="email" class="form" placeholder="ton@email.com">
-<br><br>
-<p>mot de passe:</p>
-<input type="password" class="form" placeholder="mot de passe">
-<br><br>
-<p>code de vérification: 10 restantes</p>
-<input type="text" class="form" placeholder="code reçu par email">
-<br>
-
-<button id="lapepitegivre" onclick="location.href='https://skycatgamingespore74-hub.github.io/tennis-rank/signupt2.html'">S'inscrire</button>
-
-<p>ou avec</p>
-
-<div id="g_id_onload"
-     data-client_id="876964218380-ur7th5dq7kbqaut0pjt6c54mkjma313c.apps.googleusercontent.com"
-     data-callback="handleSignupGoogle">
-</div>
-
-<div class="google-btn">
-  <div class="g_id_signin"
-       data-type="standard"
-       data-shape="pill"
-       data-theme="filled_blue"
-       data-text="signup_with"
-       data-size="large"
-       data-logo_alignment="left">
-  </div>
-</div>
-
-<p>vous avez un compte? <a href="https://skycatgamingespore74-hub.github.io/tennis-rank/Connect.html">cliquer ici</a></p>
-
-<script>
-function handleSignupGoogle(response) {
-  const data = JSON.parse(atob(response.credential.split('.')[1]));
-  alert("Inscription Google : " + data.name + " (" + data.email + ")");
-  // redirige vers ton étape 2 après inscription Google
-  window.location.href = "https://skycatgamingespore74-hub.github.io/tennis-rank/signupt2.html";
-}
-</script>
-
-</body>
+        // Store partial data and go to step 2
+        localStorage.setItem('tr_signup_fullname', fullname);
+        localStorage.setItem('tr_signup_pseudo', pseudo);
+        localStorage.setItem('tr_signup_email', email);
+        window.location.href = 'signupt2.html';
+      });
+    </script>
+  </body>
 </html>
