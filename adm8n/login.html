@@ -5,16 +5,28 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Admin Login — Tennis Rank</title>
   <style>
-    body{font-family:system-ui,Segoe UI,Arial;margin:0;background:#07111f;color:#ecf4ff;display:grid;place-items:center;min-height:100vh;padding:20px}
-    .card{width:100%;max-width:420px;padding:22px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)}
-    label{display:block;margin-bottom:6px;font-weight:700;color:#dbe8ff}
+    :root{ --bg1:#0b1020; --violet-1:#7b61ff; --violet-2:#b48bff; --muted:#b9b0d9; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;min-height:100vh;padding:24px;display:grid;place-items:center;background:radial-gradient(circle at 20% 0%, #3b2b6b, var(--bg1) 60%);color:#f4f7ff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial}
+    #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(59,43,107,0.96),rgba(11,16,32,0.98));z-index:6}
+    .splash .logo-shell{width:180px;height:180px;border-radius:26px;background:linear-gradient(135deg,var(--violet-1),var(--violet-2));display:flex;align-items:center;justify-content:center;box-shadow:0 32px 80px rgba(59,43,107,0.28)}
+
+    .card{width:100%;max-width:460px;padding:22px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));border:1px solid rgba(255,255,255,0.04);z-index:2;position:relative}
+    label{display:block;margin-bottom:6px;font-weight:700;color:#efeaff}
     input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
-    .btn{margin-top:12px;padding:12px;border-radius:999px;border:none;background:linear-gradient(90deg,#7aa7ff,#73d5d4);color:#07111f;font-weight:800;width:100%;cursor:pointer}
+    .btn{margin-top:12px;padding:12px;border-radius:999px;border:none;background:linear-gradient(90deg,var(--violet-1),var(--violet-2));color:#07111f;font-weight:800;width:100%;cursor:pointer}
     .error{color:#ffd1d1;margin-top:10px}
-    .link{margin-top:12px;display:block;color:#bfe0ff;text-decoration:none}
+    .link{margin-top:12px;display:block;color:#e8d9ff;text-decoration:none}
   </style>
 </head>
 <body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="splash" id="splash" role="img" aria-hidden="true">
+    <div class="logo-shell"><img src="../assets/tennis-rank-logo.webp" alt="Tennis Rank" style="width:120px;height:120px;border-radius:20px"></div>
+  </div>
+
   <div class="card">
     <h2>Portail admin — connexion</h2>
     <form id="login">
@@ -28,30 +40,34 @@
     <a class="link" href="../home.html">Retour accueil</a>
   </div>
 
-  <script src="auth.js"></script>
   <script>
-    // quick client-side auth for demo/testing only
+    // particles + splash from Connect.html adapted
+    function hideSplash(){const s=document.getElementById('splash');if(!s) return; s.classList.add('hide'); setTimeout(()=>{s.style.display='none'},1200)}
+    window.addEventListener('load', ()=>setTimeout(hideSplash,1100));
+
+    (function initParticles(){
+      const canvas = document.getElementById('bg-canvas');
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = innerWidth;
+      let h = canvas.height = innerHeight;
+      const particles = [];
+      const count = Math.round((w*h)/60000);
+      function rand(min,max){return Math.random()*(max-min)+min}
+      function create(){for(let i=0;i<count;i++){particles.push({x:rand(0,w),y:rand(0,h),r:rand(0.6,2.6),vx:rand(-0.05,0.05),vy:rand(-0.03,0.18),alpha:rand(0.06,0.22)})}}
+      create(); function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight}
+      addEventListener('resize', resize);
+      function frame(){ctx.clearRect(0,0,w,h);for(let p of particles){p.x+=p.vx;p.y+=p.vy;if(p.y>h+20){p.y=-10;p.x=Math.random()*w}if(p.x<-20)p.x=w+20;if(p.x>w+20)p.x=-20;ctx.beginPath();ctx.fillStyle = `rgba(180,160,255,${p.alpha})`;ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'rgba(59,43,107,0.02)');g.addColorStop(1,'rgba(11,16,32,0.02)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);requestAnimationFrame(frame)}
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(!reduce) frame();
+    })();
+
+    // admin auth (uses adm8n/auth.js if present) fallback in-page
+    const CREDENTIALS = (window.ADM && window.ADM.CREDENTIALS) ? window.ADM.CREDENTIALS : {'skycat74':'Majoly.7473','adm:tennisdev':'1515'};
     const form = document.getElementById('login');
     const err = document.getElementById('error');
-    form.addEventListener('submit', function(e){
-      e.preventDefault(); err.textContent = '';
-      const id = document.getElementById('id').value.trim();
-      const pw = document.getElementById('pw').value;
-      if(!id || !pw){ err.textContent = 'Veuillez renseigner identifiant et mot de passe.'; return; }
-      const cred = window.ADM && window.ADM.CREDENTIALS;
-      if(cred && cred[id] && cred[id] === pw){
-        // set short session token and redirect to dashboard
-        window.ADM.setToken(id, 60); // 60 minutes
-        window.location.href = 'dashboard.html';
-        return;
-      }
-      err.textContent = 'Identifiant ou mot de passe incorrect.';
-    });
+    form.addEventListener('submit', function(e){e.preventDefault(); err.textContent=''; const id=document.getElementById('id').value.trim(); const pw=document.getElementById('pw').value; if(!id||!pw){err.textContent='Veuillez renseigner identifiant et mot de passe.';return;} if(CREDENTIALS[id] && CREDENTIALS[id]===pw){ try{ window.ADM && window.ADM.setToken && window.ADM.setToken(id,60);}catch(e){} window.location.href='dashboard.html'; return;} err.textContent='Identifiant ou mot de passe incorrect.';});
 
-    // If already authenticated, go to dashboard
-    if(window.ADM && window.ADM.isAuthenticated()){
-      window.location.replace('dashboard.html');
-    }
+    if(window.ADM && window.ADM.isAuthenticated && window.ADM.isAuthenticated()){ window.location.replace('dashboard.html'); }
   </script>
 </body>
 </html>
