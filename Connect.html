@@ -27,10 +27,7 @@
         padding:24px;
         overflow:hidden;
       }
-
-      /* Animated particle canvas sits behind everything */
       #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
-
       main{width:min(100%,460px);z-index:2}
       .card{
         width:100%;
@@ -43,16 +40,12 @@
         transform: translateY(0);
         transition: transform .6s cubic-bezier(.2,.9,.2,1), opacity .4s;
       }
-
       .logo-wrap{display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:12px}
-      .logo-shell{width:96px;height:96px;border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.32);background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
-        transform-origin:center;transition:transform .5s cubic-bezier(.2,.9,.2,1),box-shadow .3s}
+      .logo-shell{width:96px;height:96px;border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.32);background:linear-gradient(135deg,var(--accent-1),var(--accent-2));position:relative;transform-origin:center;transition:transform .5s cubic-bezier(.2,.9,.2,1),box-shadow .3s}
       .logo-shell img{width:84px;height:84px;object-fit:cover;border-radius:14px;display:block}
-      /* halo shimmer */
-      .logo-shell::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));mix-blend-mode:overlay;opacity:.95;transform:translateX(-60%);transition:transform .9s}
+      .logo-shell::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));mix-blend-mode:screen;transform:translateX(-30%);transition:transform .8s ease}
       .logo-shell:hover{transform:translateY(-6px) scale(1.04);box-shadow:0 30px 70px rgba(37,85,170,0.22)}
       .logo-shell:hover::after{transform:translateX(60%)}
-
       .badge{color:#8fe0d6;font-weight:800;letter-spacing:.12em;text-transform:uppercase;text-align:center;font-size:.75rem;margin:0 0 8px}
       h1{text-align:center;margin:0 0 8px;font-size:clamp(1.6rem,6vw,2.2rem)}
       .lead{text-align:center;color:var(--muted);margin:0 0 18px}
@@ -64,45 +57,32 @@
       }
       input::placeholder{color:#9fb0da}
       input:focus{box-shadow:0 6px 30px rgba(89,124,255,0.12), inset 0 0 0 1px rgba(121,169,255,0.06);transform:translateY(-1px)}
-
       .controls{display:flex;gap:8px;align-items:center;justify-content:space-between}
-      .primary-btn{width:100%;padding:13px;border-radius:999px;border:none;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#081126;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(95,137,255,.28);position:relative;overflow:hidden}
+      .primary-btn{width:100%;padding:13px;border-radius:999px;border:none;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#081126;font-weight:800;cursor:pointer;box-shadow:0 12px 30px rgba(121,169,255,0.25)}
       .primary-btn:active{transform:translateY(1px)}
       .secondary{width:100%;padding:10px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(170,190,230,0.10);color:#dfe8ff;font-weight:700;cursor:pointer}
       .small{font-size:.9rem;color:var(--muted);text-align:center;margin-top:12px}
       .divider{text-align:center;color:var(--muted);margin:14px 0}
-
-      /* Google button improvements */
       .google-wrap{display:flex;justify-content:center;align-items:center;position:relative}
-      .google-bg{position:absolute;width:220px;height:62px;border-radius:999px;background:linear-gradient(90deg, rgba(121,169,255,0.12), rgba(93,141,255,0.08));filter:blur(8px);opacity:0.95;transform-origin:center;animation:glow 3.6s ease-in-out infinite}
+      .google-bg{position:absolute;width:220px;height:62px;border-radius:999px;background:linear-gradient(90deg, rgba(121,169,255,0.12), rgba(93,141,255,0.08));filter:blur(8px);opacity:0.95;transform:translateY(4px)}
       @keyframes glow{0%{transform:scale(.98)}50%{transform:scale(1.06)}100%{transform:scale(.98)}}
-      .google-btn-custom{display:inline-flex;align-items:center;gap:12px;padding:12px 18px;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#ffffff;font-weight:700;backdrop-filter: blur(6px);z-index:1;position:relative;overflow:hidden}
+      .google-btn-custom{display:inline-flex;align-items:center;gap:12px;padding:12px 18px;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border:1px solid rgba(170,190,230,0.10);color:#ebf1ff;font-weight:700;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,0.22)}
       .google-logo{width:20px;height:20px;border-radius:4px;display:inline-block;background-image:url('./assets/google-icon.png');background-size:contain;background-repeat:no-repeat}
       .google-text{font-size:0.95rem}
       .google-btn-custom:active{transform:translateY(1px) scale(.997)}
-
-      /* ripple effect */
       .ripple{position:absolute;border-radius:50%;transform:scale(0);opacity:.6;background:rgba(255,255,255,0.18);pointer-events:none}
-
       .error{color:#ffd1d1;background:rgba(255,210,210,0.04);border-radius:10px;padding:8px;margin-bottom:8px;border:1px solid rgba(255,180,180,0.06)}
       .password-row{display:flex;gap:8px}
       .toggle-pass{padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
-
-      /* SPLASH / APP START ANIMATION */
       .splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(36,61,114,0.96),rgba(11,16,32,0.98));z-index:6}
-      .splash .logo-shell{width:180px;height:180px;border-radius:26px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:0 30px 90px rgba(17,25,48,0.6);animation:logo-pop .9s cubic-bezier(.2,.9,.2,1) forwards}
+      .splash .logo-shell{width:180px;height:180px;border-radius:26px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:0 32px 80px rgba(37,85,170,0.28)}
       .splash img{width:120px;height:120px;object-fit:cover;border-radius:20px;display:block}
       @keyframes logo-pop{0%{transform:scale(.36) rotate(-6deg);opacity:0}60%{transform:scale(1.08) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0)}}
       .splash.hide{animation:fadeOut .6s ease forwards;animation-delay:.95s}
       @keyframes fadeOut{to{opacity:0;visibility:hidden;transform:translateY(-8px)}}
-
-      /* subtle floating for card to feel alive */
       .card.float{animation:cardFloat 6s ease-in-out infinite}
       @keyframes cardFloat{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-
       @media(max-width:480px){body{padding:18px} .card{padding:16px}}
-
-      /* Respect user motion preferences */
       @media (prefers-reduced-motion: reduce) {
         .splash, .logo-shell, .card.float, .google-bg {animation: none !important; transition: none !important}
       }
@@ -171,11 +151,11 @@
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-      // Helpers
       const $ = (id) => document.getElementById(id);
       const msg = $('msg');
+      const ADMIN_LOGIN_ID = 'adm:tennisdev';
+      const ADMIN_LOGIN_PASSWORD = '1515';
 
-      // Splash handling
       function hideSplash() {
         const s = $('splash');
         if (!s) return;
@@ -184,14 +164,13 @@
       }
       window.addEventListener('load', () => setTimeout(hideSplash, 1100));
 
-      // Particle background (canvas)
       (function initParticles(){
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let w = canvas.width = innerWidth;
         let h = canvas.height = innerHeight;
         const particles = [];
-        const count = Math.round((w*h)/60000); // scalable density
+        const count = Math.round((w*h)/60000);
 
         function rand(min,max){return Math.random()*(max-min)+min}
 
@@ -224,7 +203,6 @@
             ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
             ctx.fill();
           }
-          // subtle gradient overlay
           const g = ctx.createLinearGradient(0,0,w,h);
           g.addColorStop(0,'rgba(36,61,114,0.02)');
           g.addColorStop(1,'rgba(11,16,32,0.02)');
@@ -232,12 +210,10 @@
           ctx.fillRect(0,0,w,h);
           requestAnimationFrame(frame);
         }
-        // respect reduce motion
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
         if(!reduce) frame();
       })();
 
-      // Toggle password visibility
       $('togglePass').addEventListener('click', () => {
         const p = $('password');
         const shown = p.type === 'text';
@@ -246,7 +222,6 @@
         $('togglePass').setAttribute('aria-pressed', String(!shown));
       });
 
-      // Ripple util for buttons
       function createRipple(e, el){
         const rect = el.getBoundingClientRect();
         const d = Math.max(rect.width, rect.height)*1.6;
@@ -259,18 +234,15 @@
         ripple.animate([{transform:'scale(0)',opacity:0.45},{transform:'scale(1)',opacity:0}],{duration:520,easing:'cubic-bezier(.2,.9,.2,1)'}).onfinish = () => ripple.remove();
       }
 
-      // Add ripple to primary and google fallback
       document.addEventListener('pointerdown', (ev) => {
         const p = ev.target.closest('.primary-btn, .google-btn-custom');
         if(p) createRipple(ev, p);
       });
 
-      // Forgot password button (redirect)
       $('forgotBtn').addEventListener('click', () => {
         window.location.href = 'deverror.html';
       });
 
-      // Form submit (simulation)
       $('loginForm').addEventListener('submit', (e) => {
         e.preventDefault();
         msg.textContent = '';
@@ -278,6 +250,15 @@
         const password = $('password').value;
         if (!email || !password) {
           msg.innerHTML = '<div class="error">Merci de renseigner email et mot de passe.</div>';
+          return;
+        }
+
+        if (email === ADMIN_LOGIN_ID && password === ADMIN_LOGIN_PASSWORD) {
+          localStorage.setItem('tr_admin_redirect', '1');
+          msg.innerHTML = '<div style="color:#bff7d1;padding:8px;border-radius:8px">Redirection vers le portail admin…</div>';
+          setTimeout(() => {
+            window.location.href = 'admin.html';
+          }, 500);
           return;
         }
 
@@ -291,7 +272,6 @@
         }, 800);
       });
 
-      // Google Identity - try official SDK, fallback to custom
       const CLIENT_ID = '876964218380-ur7th5dq7kbqaut0pjt6c54mkjma313c.apps.googleusercontent.com';
 
       function handleConnectGoogle(response) {
@@ -336,7 +316,6 @@
         fb.style.display = 'inline-flex';
         fb.addEventListener('click', (ev) => {
           createRipple(ev, fb);
-          // Simulated sign-in for fallback/demo
           setTimeout(() => {
             localStorage.setItem('tr_pseudo', 'GoogleUser');
             localStorage.setItem('tr_email', 'googleuser@example.com');
@@ -355,7 +334,6 @@
         tryRenderGsi();
       });
 
-      // small entrance animation for the main logo on hover tilt
       (function addLogoTilt(){
         const logo = $('mainLogo');
         if(!logo) return;
@@ -370,7 +348,6 @@
           requestAnimationFrame(update);
         }
         document.addEventListener('mousemove', (e)=>{ mouseX=e.clientX; mouseY=e.clientY });
-        // stop tilt on touch devices or reduced motion
         if(!matchMedia('(pointer: coarse)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){ update(); }
       })();
     </script>
