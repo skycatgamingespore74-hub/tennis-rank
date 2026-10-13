@@ -1,100 +1,221 @@
 <!doctype html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>tennis-rank - Connexion</title>
-<style>
-body {
-background-color: lightblue;
-font-family: Arial, sans-serif;
-text-align: center;
-padding: 20px;
-margin: 0;
-}
-.connect {
-color: green;
-font-weight: bold;
-}
-.form {
-background-color: white;
-border-radius: 16px;
-border: 1px solid lightgrey;
-width: 90%;
-max-width: 350px;
-padding: 12px;
-font-size: 16px;
-margin: 5px auto;
-display: block;
-}
-#lapepitegivre {
-background-color: green;
-border: solid gold 1px;
-border-radius: 5px;
-font-weight: bold;
-font-family: arial;
-color: black;
-padding: 12px 30px;
-font-size: 17px;
-cursor: pointer;
-margin-top: 10px;
-}
-#logo {
-border: solid 1px black;
-border-radius: 25px;
-}
-.google-zone {
-margin-top: 15px auto;
-display: inline-block;
-}
-</style>
-</head>
-<body>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>tennis-rank - Connexion</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        background: #0b1020;
+        color: #f4f7ff;
+      }
 
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+      * { box-sizing: border-box; }
 
-<img src="https://skycatgamingespore74-hub.github.io/tennis-rank/assets/tennis-rank-logo.webp"
-alt="image indisponible" height="100" width="100" id="logo">
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 24px;
+        background: radial-gradient(circle at 20% 0%, #243d72, #0b1020 60%);
+        display: grid;
+        place-items: center;
+      }
 
-<h1 class="connect">se connecter</h1>
-<p>connecte toi pour acceder a tes apprentissages</p>
+      main {
+        width: min(100%, 430px);
+      }
 
-<p>id/email:</p>
-<input type="text" class="form" placeholder="ton email ou id">
-<br>
-<p>mot de passe:</p>
-<input type="password" class="form" placeholder="mot de passe">
-<br>
+      .card {
+        width: 100%;
+        background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.08));
+        border: 1px solid rgba(170, 190, 230, 0.18);
+        border-radius: 18px;
+        padding: 22px 20px;
+        box-shadow: 0 18px 44px rgba(0,0,0,.38);
+      }
 
-<button id="lapepitegivre" onclick="location.href='https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html'">se connecter</button>
+      .logo {
+        display: block;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 18px;
+        border-radius: 24px;
+        object-fit: cover;
+        box-shadow: 0 18px 44px rgba(0,0,0,.32);
+      }
 
-<p>ou avec</p>
+      .badge {
+        margin: 0 0 10px;
+        color: #8fe0d6;
+        font-size: .75rem;
+        font-weight: 800;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        text-align: center;
+      }
 
-<div id="g_id_onload"
-     data-client_id="876964218380-ur7th5dq7kbqaut0pjt6c54mkjma313c.apps.googleusercontent.com"
-     data-callback="handleConnectGoogle">
-</div>
-<div class="google-zone">
-  <div class="g_id_signin"
-       data-type="standard"
-       data-shape="pill"
-       data-theme="filled_blue"
-       data-text="signin_with"
-       data-size="large"
-       data-logo_alignment="left">
-  </div>
-</div>
+      h1 {
+        margin: 0 0 8px;
+        text-align: center;
+        font-size: clamp(2rem, 7vw, 2.7rem);
+        line-height: 1;
+        letter-spacing: -.05em;
+        color: #fff;
+      }
 
-<p>vous n'avez pas de compte? <a href="https://skycatgamingespore74-hub.github.io/tennis-rank/signupt1.html">cliquer ici</a></p>
+      .lead {
+        margin: 0 0 18px;
+        text-align: center;
+        color: #aab6d5;
+        font-size: 1.02rem;
+        line-height: 1.6;
+      }
 
-<script>
-function handleConnectGoogle(response) {
-  const data = JSON.parse(atob(response.credential.split('.')[1]));
-  localStorage.setItem("tr_pseudo", data.name);
-  localStorage.setItem("tr_email", data.email);
-  alert("Connecté en tant que " + data.name);
-  window.location.href = "https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html";
-}
-</script>
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
 
-</body>
+      label {
+        color: #dbe8ff;
+        font-size: .9rem;
+        font-weight: 700;
+      }
+
+      input[type='text'],
+      input[type='password'] {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(170, 190, 230, 0.18);
+        background: rgba(12, 18, 32, 0.45);
+        color: #f4f7ff;
+        font-size: 1rem;
+        outline: none;
+      }
+
+      input::placeholder {
+        color: #9fb0da;
+      }
+
+      button {
+        border: none;
+        cursor: pointer;
+        font: inherit;
+      }
+
+      .primary-btn {
+        display: inline-block;
+        width: 100%;
+        margin-top: 8px;
+        padding: 13px 18px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #79a9ff, #5d8dff);
+        color: #081126;
+        font-weight: 800;
+        box-shadow: 0 10px 24px rgba(95, 137, 255, 0.3);
+      }
+
+      .secondary-action {
+        display: block;
+        margin-top: 12px;
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(170, 190, 230, 0.15);
+        color: #dfe8ff;
+        font-weight: 700;
+      }
+
+      .divider {
+        margin: 18px 0 10px;
+        color: #aab6d5;
+        text-align: center;
+      }
+
+      .google-zone {
+        display: flex;
+        justify-content: center;
+        margin: 10px 0 12px;
+      }
+
+      .signup {
+        display: block;
+        margin-top: 14px;
+        text-align: center;
+        color: #aab6d5;
+        font-size: .95rem;
+      }
+
+      .signup a {
+        color: #79a9ff;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      @media (max-width: 480px) {
+        body { padding: 18px 14px; }
+        .card { padding: 18px 16px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="card">
+        <img class="logo" src="./assets/tennis-rank-logo.webp" alt="Logo Tennis Rank" />
+        <p class="badge">Tennis Rank · Tennis Levels</p>
+        <h1>Se connecter</h1>
+        <p class="lead">Connecte-toi pour accéder à tes apprentissages.</p>
+
+        <div class="field">
+          <label for="email">ID / email</label>
+          <input id="email" type="text" placeholder="ton email ou id" />
+        </div>
+
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input id="password" type="password" placeholder="mot de passe" />
+        </div>
+
+        <button class="primary-btn" id="lapepitegivre" onclick="location.href='https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html'">Se connecter</button>
+        <button type="button" class="secondary-action" onclick="location.href='https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html'">Mot de passe oublié</button>
+
+        <p class="divider">ou avec</p>
+
+        <div id="g_id_onload"
+             data-client_id="876964218380-ur7th5dq7kbqaut0pjt6c54mkjma313c.apps.googleusercontent.com"
+             data-callback="handleConnectGoogle">
+        </div>
+
+        <div class="google-zone">
+          <div class="g_id_signin"
+               data-type="standard"
+               data-shape="pill"
+               data-theme="filled_blue"
+               data-text="signin_with"
+               data-size="large"
+               data-logo_alignment="left">
+          </div>
+        </div>
+
+        <p class="signup">Vous n'avez pas de compte ? <a href="https://skycatgamingespore74-hub.github.io/tennis-rank/signupt1.html">Cliquer ici</a></p>
+      </div>
+    </main>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      function handleConnectGoogle(response) {
+        const data = JSON.parse(atob(response.credential.split('.')[1]));
+        localStorage.setItem('tr_pseudo', data.name);
+        localStorage.setItem('tr_email', data.email);
+        alert('Connecté en tant que ' + data.name);
+        window.location.href = 'https://skycatgamingespore74-hub.github.io/tennis-rank/deverror.html';
+      }
+    </script>
+  </body>
 </html>
