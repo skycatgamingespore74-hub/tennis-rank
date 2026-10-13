@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Statistiques — Admin Tennis Rank</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial;margin:0;background:#07111f;color:#ecf4ff}
+    header{padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;justify-content:space-between}
+    main{padding:18px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .card{background:rgba(255,255,255,0.02);padding:14px;border-radius:10px;min-width:180px}
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+  <script>window.ADM && window.ADM.requireAuth();</script>
+  <header>
+    <div>Admin — statistiques</div>
+    <div><a href="dashboard.html">Retour</a></div>
+  </header>
+  <main>
+    <h2>Vue d'ensemble</h2>
+    <div class="row">
+      <div class="card"><strong>Utilisateurs</strong><div>128</div></div>
+      <div class="card"><strong>Tests</strong><div>39</div></div>
+      <div class="card"><strong>Progression</strong><div>+18%</div></div>
+    </div>
+  </main>
+</body>
+</html>

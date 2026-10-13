@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard — Tennis Rank</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial;margin:0;background:#07111f;color:#ecf4ff}
+    header{Padding:18px 24px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;justify-content:space-between;align-items:center}
+    .brand{font-weight:800}
+    main{padding:22px}
+    .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+    .tile{background:rgba(255,255,255,0.02);padding:14px;border-radius:12px}
+    .logout{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:999px;color:#bfe0ff;text-decoration:none}
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+  <script>window.ADM && window.ADM.requireAuth();</script>
+  <header>
+    <div class="brand">Tennis Rank — Admin</div>
+    <div>
+      <a class="logout" href="#" id="logout">Se déconnecter</a>
+    </div>
+  </header>
+  <main>
+    <h1>Tableau de bord</h1>
+    <p>Bienvenue — espace administrateur.</p>
+    <div class="tiles">
+      <div class="tile"><strong>Utilisateurs</strong><div style="margin-top:8px;color:#b9c8e1">128 comptes</div></div>
+      <div class="tile"><strong>Évaluations</strong><div style="margin-top:8px;color:#b9c8e1">39 en cours</div></div>
+      <div class="tile"><strong>Sessions</strong><div style="margin-top:8px;color:#b9c8e1">24 actives</div></div>
+    </div>
+
+    <section style="margin-top:18px">
+      <a href="users.html">Gérer les utilisateurs</a> — <a href="stats.html">Voir les stats</a>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('logout').addEventListener('click', function(e){ e.preventDefault(); window.ADM.clearToken(); window.location.href='../Connect.html'; });
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login — Tennis Rank</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial;margin:0;background:#07111f;color:#ecf4ff;display:grid;place-items:center;min-height:100vh;padding:20px}
+    .card{width:100%;max-width:420px;padding:22px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)}
+    label{display:block;margin-bottom:6px;font-weight:700;color:#dbe8ff}
+    input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .btn{margin-top:12px;padding:12px;border-radius:999px;border:none;background:linear-gradient(90deg,#7aa7ff,#73d5d4);color:#07111f;font-weight:800;width:100%;cursor:pointer}
+    .error{color:#ffd1d1;margin-top:10px}
+    .link{margin-top:12px;display:block;color:#bfe0ff;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Portail admin — connexion</h2>
+    <form id="login">
+      <label for="id">Identifiant</label>
+      <input id="id" name="id" type="text" value="" autocomplete="username" />
+      <label for="pw">Mot de passe</label>
+      <input id="pw" name="pw" type="password" autocomplete="current-password" />
+      <button class="btn" type="submit">Se connecter</button>
+    </form>
+    <div id="error" class="error" role="alert" aria-live="polite"></div>
+    <a class="link" href="../home.html">Retour accueil</a>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    // quick client-side auth for demo/testing only
+    const form = document.getElementById('login');
+    const err = document.getElementById('error');
+    form.addEventListener('submit', function(e){
+      e.preventDefault(); err.textContent = '';
+      const id = document.getElementById('id').value.trim();
+      const pw = document.getElementById('pw').value;
+      if(!id || !pw){ err.textContent = 'Veuillez renseigner identifiant et mot de passe.'; return; }
+      const cred = window.ADM && window.ADM.CREDENTIALS;
+      if(cred && cred[id] && cred[id] === pw){
+        // set short session token and redirect to dashboard
+        window.ADM.setToken(id, 60); // 60 minutes
+        window.location.href = 'dashboard.html';
+        return;
+      }
+      err.textContent = 'Identifiant ou mot de passe incorrect.';
+    });
+
+    // If already authenticated, go to dashboard
+    if(window.ADM && window.ADM.isAuthenticated()){
+      window.location.replace('dashboard.html');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Utilisateurs — Admin Tennis Rank</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial;margin:0;background:#07111f;color:#ecf4ff}
+    header{padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;justify-content:space-between}
+    main{padding:18px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left}
+    .badge{display:inline-block;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+  <script>window.ADM && window.ADM.requireAuth();</script>
+  <header>
+    <div>Admin — utilisateurs</div>
+    <div><a href="dashboard.html">Retour</a></div>
+  </header>
+  <main>
+    <h2>Liste des utilisateurs</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Email</th><th>Inscription</th><th>Statut</th></tr></thead>
+      <tbody>
+        <tr><td>u001</td><td>alice@example.com</td><td>2026-09-21</td><td><span class="badge">actif</span></td></tr>
+        <tr><td>u002</td><td>bob@example.com</td><td>2026-09-30</td><td><span class="badge">actif</span></td></tr>
+        <tr><td>u003</td><td>carla@example.com</td><td>2026-10-02</td><td><span class="badge">inactif</span></td></tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>
