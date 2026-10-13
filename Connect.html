@@ -16,6 +16,7 @@
         font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       }
       *{box-sizing:border-box}
+      html,body{height:100%}
       body{
         margin:0;
         min-height:100vh;
@@ -26,6 +27,10 @@
         padding:24px;
         overflow:hidden;
       }
+
+      /* Animated particle canvas sits behind everything */
+      #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
       main{width:min(100%,460px);z-index:2}
       .card{
         width:100%;
@@ -34,11 +39,20 @@
         border-radius:18px;
         padding:22px;
         box-shadow:0 18px 44px rgba(0,0,0,.38);
-        backdrop-filter: blur(6px);
+        backdrop-filter: blur(8px) saturate(1.08);
         transform: translateY(0);
         transition: transform .6s cubic-bezier(.2,.9,.2,1), opacity .4s;
       }
-      .logo{display:block;width:96px;height:96px;margin:0 auto 14px;border-radius:18px;object-fit:cover}
+
+      .logo-wrap{display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:12px}
+      .logo-shell{width:96px;height:96px;border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.32);background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+        transform-origin:center;transition:transform .5s cubic-bezier(.2,.9,.2,1),box-shadow .3s}
+      .logo-shell img{width:84px;height:84px;object-fit:cover;border-radius:14px;display:block}
+      /* halo shimmer */
+      .logo-shell::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));mix-blend-mode:overlay;opacity:.95;transform:translateX(-60%);transition:transform .9s}
+      .logo-shell:hover{transform:translateY(-6px) scale(1.04);box-shadow:0 30px 70px rgba(37,85,170,0.22)}
+      .logo-shell:hover::after{transform:translateX(60%)}
+
       .badge{color:#8fe0d6;font-weight:800;letter-spacing:.12em;text-transform:uppercase;text-align:center;font-size:.75rem;margin:0 0 8px}
       h1{text-align:center;margin:0 0 8px;font-size:clamp(1.6rem,6vw,2.2rem)}
       .lead{text-align:center;color:var(--muted);margin:0 0 18px}
@@ -46,40 +60,57 @@
       label{font-weight:700;color:#dbe8ff;font-size:.95rem}
       input[type="text"],input[type="email"],input[type="password"]{
         padding:12px 14px;border-radius:12px;border:1px solid rgba(170,190,230,0.12);
-        background:rgba(12,18,32,0.45);color:inherit;font-size:1rem;outline:none;
+        background:linear-gradient(180deg, rgba(12,18,32,0.52), rgba(12,18,32,0.42));color:inherit;font-size:1rem;outline:none;transition:box-shadow .18s ease, transform .12s ease;
       }
       input::placeholder{color:#9fb0da}
+      input:focus{box-shadow:0 6px 30px rgba(89,124,255,0.12), inset 0 0 0 1px rgba(121,169,255,0.06);transform:translateY(-1px)}
+
       .controls{display:flex;gap:8px;align-items:center;justify-content:space-between}
-      .primary-btn{width:100%;padding:13px;border-radius:999px;border:none;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#081126;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(95,137,255,.28)}
+      .primary-btn{width:100%;padding:13px;border-radius:999px;border:none;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#081126;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(95,137,255,.28);position:relative;overflow:hidden}
+      .primary-btn:active{transform:translateY(1px)}
       .secondary{width:100%;padding:10px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(170,190,230,0.10);color:#dfe8ff;font-weight:700;cursor:pointer}
       .small{font-size:.9rem;color:var(--muted);text-align:center;margin-top:12px}
       .divider{text-align:center;color:var(--muted);margin:14px 0}
 
       /* Google button improvements */
       .google-wrap{display:flex;justify-content:center;align-items:center;position:relative}
-      .google-bg{position:absolute;width:160px;height:56px;border-radius:999px;background:linear-gradient(90deg, rgba(121,169,255,0.12), rgba(93,141,255,0.08));filter:blur(8px);opacity:0.9;transform-origin:center;animation:glow 2.8s ease-in-out infinite}
-      @keyframes glow{0%{transform:scale(.95)}50%{transform:scale(1.06)}100%{transform:scale(.95)}}
-      /* small animated accent behind button */
-      .google-btn-custom{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#ffffff;font-weight:700;backdrop-filter: blur(4px);z-index:1}
+      .google-bg{position:absolute;width:220px;height:62px;border-radius:999px;background:linear-gradient(90deg, rgba(121,169,255,0.12), rgba(93,141,255,0.08));filter:blur(8px);opacity:0.95;transform-origin:center;animation:glow 3.6s ease-in-out infinite}
+      @keyframes glow{0%{transform:scale(.98)}50%{transform:scale(1.06)}100%{transform:scale(.98)}}
+      .google-btn-custom{display:inline-flex;align-items:center;gap:12px;padding:12px 18px;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.05);cursor:pointer;color:#ffffff;font-weight:700;backdrop-filter: blur(6px);z-index:1;position:relative;overflow:hidden}
       .google-logo{width:20px;height:20px;border-radius:4px;display:inline-block;background-image:url('./assets/google-icon.png');background-size:contain;background-repeat:no-repeat}
       .google-text{font-size:0.95rem}
+      .google-btn-custom:active{transform:translateY(1px) scale(.997)}
+
+      /* ripple effect */
+      .ripple{position:absolute;border-radius:50%;transform:scale(0);opacity:.6;background:rgba(255,255,255,0.18);pointer-events:none}
 
       .error{color:#ffd1d1;background:rgba(255,210,210,0.04);border-radius:10px;padding:8px;margin-bottom:8px;border:1px solid rgba(255,180,180,0.06)}
       .password-row{display:flex;gap:8px}
       .toggle-pass{padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
 
       /* SPLASH / APP START ANIMATION */
-      .splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(36,61,114,0.9),rgba(11,16,32,0.95));z-index:5}
-      .splash .logo-shell{width:160px;height:160px;border-radius:28px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:0 20px 50px rgba(17,25,48,0.6);animation:logo-pop .9s cubic-bezier(.2,.9,.2,1) forwards}
-      .splash img{width:100px;height:100px;object-fit:cover;border-radius:18px;transform:translateY(0)}
-      @keyframes logo-pop{0%{transform:scale(.4) rotate(-6deg);opacity:0}60%{transform:scale(1.08) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0)}}
-      .splash.hide{animation:fadeOut .6s ease forwards;animation-delay:.9s}
+      .splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(36,61,114,0.96),rgba(11,16,32,0.98));z-index:6}
+      .splash .logo-shell{width:180px;height:180px;border-radius:26px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:0 30px 90px rgba(17,25,48,0.6);animation:logo-pop .9s cubic-bezier(.2,.9,.2,1) forwards}
+      .splash img{width:120px;height:120px;object-fit:cover;border-radius:20px;display:block}
+      @keyframes logo-pop{0%{transform:scale(.36) rotate(-6deg);opacity:0}60%{transform:scale(1.08) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+      .splash.hide{animation:fadeOut .6s ease forwards;animation-delay:.95s}
       @keyframes fadeOut{to{opacity:0;visibility:hidden;transform:translateY(-8px)}}
 
+      /* subtle floating for card to feel alive */
+      .card.float{animation:cardFloat 6s ease-in-out infinite}
+      @keyframes cardFloat{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+
       @media(max-width:480px){body{padding:18px} .card{padding:16px}}
+
+      /* Respect user motion preferences */
+      @media (prefers-reduced-motion: reduce) {
+        .splash, .logo-shell, .card.float, .google-bg {animation: none !important; transition: none !important}
+      }
     </style>
   </head>
   <body>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
     <div class="splash" id="splash" role="img" aria-hidden="true">
       <div class="logo-shell">
         <img src="./assets/tennis-rank-logo.webp" alt="Tennis Rank" />
@@ -87,8 +118,12 @@
     </div>
 
     <main>
-      <div class="card" role="region" aria-labelledby="login-title">
-        <img class="logo" src="./assets/tennis-rank-logo.webp" alt="Logo Tennis Rank" />
+      <div class="card float" role="region" aria-labelledby="login-title">
+        <div class="logo-wrap">
+          <div class="logo-shell" id="mainLogo">
+            <img src="./assets/tennis-rank-logo.webp" alt="Logo Tennis Rank" />
+          </div>
+        </div>
         <p class="badge">Tennis Rank · Tennis Levels</p>
         <h1 id="login-title">Se connecter</h1>
         <p class="lead">Accède à tes apprentissages et ton suivi.</p>
@@ -120,9 +155,8 @@
         <p class="divider">ou avec</p>
 
         <div class="google-zone">
-          <div class="google-wrap">
+          <div class="google-wrap" id="googleWrap">
             <div class="google-bg" aria-hidden="true"></div>
-            <!-- We'll render the official GSI button inside #googleBtn when the SDK is available. If not, we show a graceful custom button. -->
             <div id="googleBtnContainer"></div>
             <button id="googleFallback" class="google-btn-custom" type="button" style="display:none">
               <span class="google-logo" aria-hidden="true"></span>
@@ -137,7 +171,7 @@
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-      // UI helpers
+      // Helpers
       const $ = (id) => document.getElementById(id);
       const msg = $('msg');
 
@@ -148,8 +182,60 @@
         s.classList.add('hide');
         setTimeout(() => { s.style.display = 'none'; }, 1200);
       }
-      // Hide splash after the logo animation completes
       window.addEventListener('load', () => setTimeout(hideSplash, 1100));
+
+      // Particle background (canvas)
+      (function initParticles(){
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = innerWidth;
+        let h = canvas.height = innerHeight;
+        const particles = [];
+        const count = Math.round((w*h)/60000); // scalable density
+
+        function rand(min,max){return Math.random()*(max-min)+min}
+
+        function create(){
+          for(let i=0;i<count;i++){
+            particles.push({
+              x: rand(0,w),
+              y: rand(0,h),
+              r: rand(0.6,2.6),
+              vx: rand(-0.05,0.05),
+              vy: rand(-0.03,0.18),
+              alpha: rand(0.06,0.22)
+            });
+          }
+        }
+        create();
+
+        function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight}
+        addEventListener('resize', resize);
+
+        function frame(){
+          ctx.clearRect(0,0,w,h);
+          for(let p of particles){
+            p.x += p.vx;
+            p.y += p.vy;
+            if(p.y > h + 20){ p.y = -10; p.x = Math.random()*w }
+            if(p.x < -20) p.x = w+20; if(p.x> w+20) p.x=-20
+            ctx.beginPath();
+            ctx.fillStyle = `rgba(185,205,255,${p.alpha})`;
+            ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+            ctx.fill();
+          }
+          // subtle gradient overlay
+          const g = ctx.createLinearGradient(0,0,w,h);
+          g.addColorStop(0,'rgba(36,61,114,0.02)');
+          g.addColorStop(1,'rgba(11,16,32,0.02)');
+          ctx.fillStyle = g;
+          ctx.fillRect(0,0,w,h);
+          requestAnimationFrame(frame);
+        }
+        // respect reduce motion
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if(!reduce) frame();
+      })();
 
       // Toggle password visibility
       $('togglePass').addEventListener('click', () => {
@@ -160,9 +246,28 @@
         $('togglePass').setAttribute('aria-pressed', String(!shown));
       });
 
-      // Forgot password button (redirect to improved page)
+      // Ripple util for buttons
+      function createRipple(e, el){
+        const rect = el.getBoundingClientRect();
+        const d = Math.max(rect.width, rect.height)*1.6;
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.width = ripple.style.height = d + 'px';
+        ripple.style.left = (e.clientX - rect.left - d/2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - d/2) + 'px';
+        el.appendChild(ripple);
+        ripple.animate([{transform:'scale(0)',opacity:0.45},{transform:'scale(1)',opacity:0}],{duration:520,easing:'cubic-bezier(.2,.9,.2,1)'}).onfinish = () => ripple.remove();
+      }
+
+      // Add ripple to primary and google fallback
+      document.addEventListener('pointerdown', (ev) => {
+        const p = ev.target.closest('.primary-btn, .google-btn-custom');
+        if(p) createRipple(ev, p);
+      });
+
+      // Forgot password button (redirect)
       $('forgotBtn').addEventListener('click', () => {
-        window.location.href = 'deverror.html'; // améliorer si vous avez une vraie page reset
+        window.location.href = 'deverror.html';
       });
 
       // Form submit (simulation)
@@ -176,18 +281,17 @@
           return;
         }
 
-        // Simule vérification — remplacez par appel réel à backend
         localStorage.setItem('tr_email', email);
         localStorage.setItem('tr_pseudo', email.split('@')[0] || 'Utilisateur');
         if ($('remember').checked) localStorage.setItem('tr_remember', '1');
         msg.innerHTML = '<div style="color:#bff7d1;padding:8px;border-radius:8px">Connexion réussie — redirection…</div>';
 
         setTimeout(() => {
-          window.location.href = 'deverror.html'; // ou la page d'accueil réelle
+          window.location.href = 'deverror.html';
         }, 800);
       });
 
-      // Google Identity: try to render official button; if SDK not ready within timeout, show fallback custom button
+      // Google Identity - try official SDK, fallback to custom
       const CLIENT_ID = '876964218380-ur7th5dq7kbqaut0pjt6c54mkjma313c.apps.googleusercontent.com';
 
       function handleConnectGoogle(response) {
@@ -205,13 +309,11 @@
 
       function renderGsiButton() {
         if (!window.google || !google.accounts || !google.accounts.id) return false;
-        // initialize (idempotent)
         try {
           google.accounts.id.initialize({
             client_id: CLIENT_ID,
             callback: handleConnectGoogle
           });
-          // Render the official button into our container with a neutral theme so it matches UI
           const container = $('googleBtnContainer');
           container.innerHTML = '';
           const btn = document.createElement('div');
@@ -224,38 +326,53 @@
             shape: 'pill',
             text: 'signin_with'
           });
-          // hide fallback
           $('googleFallback').style.display = 'none';
           return true;
-        } catch (e) {
-          return false;
-        }
-      }
-
-      // Fallback behaviour if SDK doesn't load
-      let gsiLoaded = false;
-      function tryRenderGsi(retries = 20) {
-        if (renderGsiButton()) { gsiLoaded = true; return; }
-        if (retries <= 0) { showGoogleFallback(); return; }
-        setTimeout(() => tryRenderGsi(retries - 1), 150);
+        } catch (e) { return false; }
       }
 
       function showGoogleFallback() {
         const fb = $('googleFallback');
         fb.style.display = 'inline-flex';
-        fb.addEventListener('click', () => {
+        fb.addEventListener('click', (ev) => {
+          createRipple(ev, fb);
           // Simulated sign-in for fallback/demo
-          localStorage.setItem('tr_pseudo', 'GoogleUser');
-          localStorage.setItem('tr_email', 'googleuser@example.com');
-          alert('Connecté via Google (simulation)');
-          window.location.href = 'deverror.html';
+          setTimeout(() => {
+            localStorage.setItem('tr_pseudo', 'GoogleUser');
+            localStorage.setItem('tr_email', 'googleuser@example.com');
+            alert('Connecté via Google (simulation)');
+            window.location.href = 'deverror.html';
+          }, 320);
         });
       }
 
-      // Start trying after the SDK script has been parsed
+      function tryRenderGsi(retries = 20) {
+        if (renderGsiButton()) return;
+        if (retries <= 0) { showGoogleFallback(); return; }
+        setTimeout(() => tryRenderGsi(retries - 1), 150);
+      }
       document.addEventListener('DOMContentLoaded', () => {
         tryRenderGsi();
       });
+
+      // small entrance animation for the main logo on hover tilt
+      (function addLogoTilt(){
+        const logo = $('mainLogo');
+        if(!logo) return;
+        let rect, mouseX=0, mouseY=0;
+        function update(){
+          if(!rect) rect = logo.getBoundingClientRect();
+          const dx = (mouseX - (rect.left + rect.width/2));
+          const dy = (mouseY - (rect.top + rect.height/2));
+          const rx = Math.max(Math.min(dy/20,8),-8);
+          const ry = Math.max(Math.min(dx/20,8),-8);
+          logo.style.transform = `perspective(600px) rotateX(${ -rx }deg) rotateY(${ ry }deg)`;
+          requestAnimationFrame(update);
+        }
+        document.addEventListener('mousemove', (e)=>{ mouseX=e.clientX; mouseY=e.clientY });
+        // stop tilt on touch devices or reduced motion
+        if(!matchMedia('(pointer: coarse)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){ update(); }
+      })();
     </script>
   </body>
 </html>
