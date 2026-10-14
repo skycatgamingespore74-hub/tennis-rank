@@ -3,743 +3,292 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Tennis Rank — Train</title>
+    <title>Tennis Rank — Train (Mimo style amélioré)</title>
     <style>
-      :root {
-        --bg: #07111f;
-        --bg2: #0d1b2d;
-        --card: rgba(16, 24, 38, 0.92);
-        --card-2: rgba(21, 31, 46, 0.98);
-        --accent: #79a9ff;
-        --accent-2: #5d8dff;
-        --green: #7fe3a6;
-        --yellow: #ffd76c;
-        --orange: #ffb778;
-        --danger: #ff8a80;
-        --muted: #b6c5e2;
-        --text: #edf4ff;
-        --nav: #0b1321;
-        --line: rgba(255,255,255,0.07);
-      }
-      * { box-sizing: border-box; }
-      html, body { margin: 0; min-height: 100%; }
-      body {
-        font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
-        background: radial-gradient(circle at 50% 0%, #243d72 0%, #07111f 54%);
-        color: var(--text);
-      }
-      .app { max-width: 1180px; margin: 0 auto; padding: 18px 18px 110px; }
-      .topbar {
-        display: flex; align-items: center; justify-content: space-between; gap: 12px;
-        padding: 14px 16px; border: 1px solid var(--line); background: rgba(10, 18, 30, 0.72);
-        border-radius: 18px; backdrop-filter: blur(8px); position: sticky; top: 8px; z-index: 10;
-      }
-      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; }
-      .brand .logo {
-        width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px;
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        box-shadow: 0 12px 26px rgba(93,141,255,0.28);
-      }
-      .brand .logo img { width: 30px; height: 30px; border-radius: 10px; }
-      .tiny-badge {
-        display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); color: var(--muted);
-        font-size: 0.8rem; font-weight: 700;
-      }
-      .screen { display: none; }
-      .screen.active { display: block; }
+      :root{--bg:#07111f;--accent:#79a9ff;--accent-2:#5d8dff;--muted:#b6c5e2;--card:#0f1724;--success:#7fe3a6}
+      *{box-sizing:border-box}
+      html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(circle at 50% 0%,#243d72 0%,var(--bg)60%);color:#edf4ff}
+      .app{max-width:1180px;margin:0 auto;padding:18px 18px 120px}
+      .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04)}
+      .brand{display:flex;gap:12px;align-items:center;font-weight:800}
+      .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center}
+      .grid{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:18px}
+      @media(max-width:800px){.grid{grid-template-columns:1fr}}
 
-      .grid {
-        display: grid; grid-template-columns: 320px minmax(0,1fr); gap: 18px; margin-top: 18px;
-      }
-      .panel {
-        background: rgba(12, 18, 30, 0.78); border: 1px solid var(--line); border-radius: 20px;
-        box-shadow: 0 18px 38px rgba(0,0,0,0.18);
-      }
-      .panel.pad { padding: 16px; }
-      .profile-box {
-        display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line);
-        border-radius: 16px; background: linear-gradient(180deg, rgba(121,169,255,0.1), rgba(255,255,255,0.02));
-      }
-      .avatar {
-        width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center;
-        background: linear-gradient(135deg, var(--yellow), var(--orange)); color: #1f1f1f; font-weight: 900; font-size: 1.2rem;
-      }
-      .user-name { margin: 0; font-size: 1.1rem; font-weight: 800; }
-      .muted { color: var(--muted); }
-      .stats { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 14px; }
-      .stat { padding: 10px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); }
-      .stat .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-      .stat .value { font-weight: 900; font-size: 1.3rem; margin-top: 4px; }
-      .lessons { margin-top: 16px; }
-      .lessons h4 { margin: 0 0 8px; }
-      .lesson-item {
-        width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px;
-        border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,0.02);
-        padding: 10px 12px; margin-top: 8px; text-align: left; color: var(--text); font: inherit; cursor: pointer;
-      }
-      .lesson-item.active { background: linear-gradient(90deg, rgba(121,169,255,0.18), rgba(93,141,255,0.04)); border-color: rgba(121,169,255,0.3); }
-      .lesson-item .meta { display: flex; flex-direction: column; }
-      .lesson-item .xp { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em; padding: 6px 8px; border-radius: 999px; background: rgba(121,169,255,0.14); }
-      .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-      .badge { display: inline-block; padding: 6px 8px; border-radius: 999px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.02); font-size: 0.78rem; font-weight: 700; }
+      /* panels */
+      .panel{background:linear-gradient(180deg,rgba(10,18,30,0.82),rgba(8,12,20,0.86));border:1px solid rgba(255,255,255,0.04);border-radius:18px;padding:14px}
+      .profile-box{display:flex;gap:12px;align-items:center}
+      .avatar{width:58px;height:58px;border-radius:14px;background:linear-gradient(90deg,#ffd76c,#ffb778);display:grid;place-items:center;font-weight:900;color:#111}
+      .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+      .stat{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);font-weight:800}
 
-      .train-main { display: grid; gap: 18px; }
-      .hero {
-        display: grid; grid-template-columns: 130px minmax(0,1fr); gap: 20px; align-items: center;
-        padding: 20px; border-radius: 18px; background: linear-gradient(135deg, rgba(121,169,255,0.12), rgba(93,141,255,0.06)); border: 1px solid rgba(121,169,255,0.18);
-      }
-      .ring { width: 110px; height: 110px; display: block; }
-      .ring .bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 4; }
-      .ring .progress { fill: none; stroke: url(#ringgrad); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 0; transform: rotate(-90deg); transform-origin: 50% 50%; }
-      .ring .value { font-size: 0.4rem; font-weight: 900; fill: var(--text); text-anchor: middle; dominant-baseline: middle; }
-      .hero h1 { margin: 0 0 4px; font-size: clamp(1.8rem, 3vw, 2.5rem); }
-      .hero p { margin: 0; color: var(--muted); line-height: 1.7; }
+      /* lesson list (aside) */
+      .lesson-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:12px;margin-top:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;cursor:pointer;transition:transform .28s,box-shadow .28s}
+      .lesson-item:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(5,12,30,0.6)}
+      .lesson-item.active{background:linear-gradient(90deg,rgba(121,169,255,0.12),rgba(93,141,255,0.06));border-color:rgba(121,169,255,0.18)}
 
-      .unit-card {
-        padding: 18px; border-radius: 18px; background: rgba(10, 18, 30, 0.72); border: 1px solid var(--line);
-      }
-      .unit-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-      .mini-units { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
-      .mini-unit {
-        padding: 7px 10px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.03);
-        font-size: 0.8rem; color: var(--muted);
-      }
-      .mini-unit.done { background: linear-gradient(90deg, var(--green), rgba(127,227,166,0.6)); color: #062314; font-weight: 800; }
-      .question { margin-top: 18px; }
-      .answers { display: grid; gap: 10px; margin-top: 12px; }
-      .answer-btn {
-        text-align: left; width: 100%; border-radius: 12px; border: 1px solid var(--line);
-        background: rgba(255,255,255,0.02); color: var(--text); padding: 12px 14px; font: inherit; cursor: pointer;
-      }
-      .answer-btn.correct { background: linear-gradient(90deg, rgba(127,227,166,0.22), rgba(127,227,166,0.1)); border-color: rgba(127,227,166,0.26); color: var(--text); }
-      .answer-btn.wrong { background: rgba(255,138,128,0.08); border-color: rgba(255,138,128,0.2); }
-      .feedback { min-height: 28px; margin-top: 10px; font-weight: 800; }
-      .feedback.good { color: var(--green); }
-      .feedback.bad { color: var(--danger); }
-      .tip { margin-top: 10px; display: none; padding: 10px 12px; border-radius: 10px; background: rgba(121,169,255,0.08); border: 1px solid rgba(121,169,255,0.12); color: var(--muted); }
-      .controls { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
-      .btn {
-        border: none; border-radius: 999px; padding: 11px 16px; font-weight: 800; font-size: 0.92rem; cursor: pointer;
-      }
-      .btn.primary { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #081126; }
-      .btn.ghost { background: rgba(255,255,255,0.02); color: var(--text); border: 1px solid var(--line); }
+      /* main training card - mimic Mimo */
+      .card-hero{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;padding:18px;border-radius:16px;background:linear-gradient(180deg,rgba(121,169,255,0.06),rgba(255,255,255,0.02));border:1px solid rgba(121,169,255,0.12);overflow:hidden}
+      .ring{width:110px;height:110px}
+      .hero-text h1{margin:0;font-size:1.6rem}
+      .hero-text p{margin:6px 0 0;color:var(--muted)}
 
-      .lead-list { display: grid; gap: 10px; margin-top: 18px; }
-      .leader-card, .school-card, .profile-card, .max-card {
-        padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--line);
-      }
-      .leader-item {
-        display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-      }
-      .leader-item:last-child { border-bottom: none; }
-      .rank { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.04); font-weight: 800; }
-      .rank.gold { background: rgba(255,215,108,0.18); color: #ffd76c; }
-      .rank.silver { background: rgba(200,210,210,0.1); color: #dfe7f7; }
-      .rank.bronze { background: rgba(208,128,70,0.14); color: #ffb778; }
-      .two-col { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
-      .max-card .price { font-size: 2rem; font-weight: 900; color: var(--accent); }
-      .list { margin: 12px 0 0 18px; color: var(--muted); line-height: 1.8; }
-      .profile-card .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
-      .profile-card .row:last-child { border-bottom: none; }
+      /* unit card */
+      .unit-card{margin-top:14px;padding:16px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+      .mini-units{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+      .mini-unit{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.02);font-weight:700;color:var(--muted);cursor:pointer;transition:transform .28s}
+      .mini-unit.done{background:linear-gradient(90deg,var(--success),rgba(127,227,166,0.6));color:#062314}
 
-      .bottom-nav {
-        position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; width: min(100% - 22px, 760px);
-        display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 6px;
-        padding: 10px 8px; background: rgba(10, 17, 27, 0.9); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; box-shadow: 0 18px 40px rgba(0,0,0,0.28); backdrop-filter: blur(10px);
-      }
-      .nav-btn {
-        appearance: none; border: none; background: transparent; color: var(--muted); padding: 10px 8px; border-radius: 12px; cursor: pointer; font: inherit; font-weight: 700;
-      }
-      .nav-btn.active { background: linear-gradient(180deg, rgba(121,169,255,0.12), rgba(121,169,255,0.04)); color: var(--text); }
-      .nav-btn .icon { display: block; font-size: 1.2rem; }
-      .nav-btn .label { display: block; font-size: 0.7rem; margin-top: 2px; }
+      .question{margin-top:14px}
+      .answers{display:grid;gap:10px;margin-top:12px}
+      .answer-btn{padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);text-align:left;cursor:pointer;font-weight:800}
+      .answer-btn.correct{background:linear-gradient(90deg,rgba(127,227,166,0.22),rgba(127,227,166,0.08));border-color:rgba(127,227,166,0.2)}
+      .answer-btn.wrong{background:rgba(255,138,128,0.08);border-color:rgba(255,138,128,0.18)}
+      .feedback{margin-top:10px;font-weight:900}
 
-      @media (max-width: 800px) {
-        .grid { grid-template-columns: 1fr; }
-      }
-      @media (max-width: 500px) {
-        .hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
-        .two-col { grid-template-columns: 1fr; }
-      }
+      .controls{display:flex;gap:10px;align-items:center;margin-top:14px}
+      .btn{padding:10px 14px;border-radius:999px;border:none;cursor:pointer;font-weight:900}
+      .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#081126}
+      .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+
+      /* finish modal */
+      .modal{position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.6));z-index:9999;visibility:hidden;opacity:0;transition:opacity .25s,visibility .25s}
+      .modal.show{visibility:visible;opacity:1}
+      .modal-card{width:min(520px,94%);background:linear-gradient(180deg,rgba(10,18,30,0.96),rgba(8,12,20,0.98));border-radius:18px;padding:18px;border:1px solid rgba(255,255,255,0.04);text-align:center}
+      .modal-card h3{margin:6px 0 0}
+      .modal-badges{display:flex;gap:8px;justify-content:center;margin-top:10px}
+
+      /* enter/exit animations for lesson card */
+      .animate-enter{animation:enterFromRight .42s cubic-bezier(.2,.9,.3,1)}
+      .animate-exit{animation:exitToLeft .38s cubic-bezier(.2,.9,.3,1)}
+      @keyframes enterFromRight{from{transform:translateX(18px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+      @keyframes exitToLeft{from{opacity:1}to{transform:translateX(-12px) scale(.995);opacity:0}}
+
+      /* bottom nav */
+      .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;width:min(100% - 24px,760px);display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:10px;background:rgba(10,17,27,0.94);border:1px solid rgba(255,255,255,0.04);border-radius:20px;z-index:50}
+      .nav-btn{background:transparent;border:none;color:var(--muted);padding:8px 6px;border-radius:12px;cursor:pointer;font-weight:800}
+      .nav-btn.active{background:linear-gradient(180deg,rgba(121,169,255,0.08),rgba(93,141,255,0.04));color:#edf4ff}
+
     </style>
   </head>
   <body>
     <div class="app">
       <header class="topbar">
-        <div class="brand">
-          <div class="logo"><img src="./assets/tennis-rank-logo.webp" alt="logo" /></div>
-          <span>Tennis Rank</span>
-        </div>
-        <div class="tiny-badge">🔥 <span id="streakCount">0</span> jours</div>
+        <div class="brand"><div class="logo"><img src="./assets/tennis-rank-logo.webp" alt="logo" style="width:28px;height:28px;border-radius:8px"></div><span>Tennis Rank</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><div class="tiny-badge" style="color:var(--muted)">Train — uniquement tennis</div></div>
       </header>
 
-      <section id="screen-train" class="screen active">
-        <div class="grid">
-          <aside class="panel pad">
+      <section class="grid">
+        <aside>
+          <div class="panel">
             <div class="profile-box">
               <div class="avatar" id="avatarInitial">J</div>
               <div>
-                <p class="user-name" id="userName">Joueur</p>
-                <div class="muted" id="userLevel">Niveau Junior</div>
+                <div id="userName" style="font-weight:900">Joueur</div>
+                <div id="userLevel" class="muted">Niveau Junior</div>
               </div>
             </div>
-
             <div class="stats">
-              <div class="stat"><div class="label">XP</div><div class="value" id="xpValue">680</div></div>
-              <div class="stat"><div class="label">Moy.</div><div class="value" id="accuracyValue">86%</div></div>
-              <div class="stat"><div class="label">Leçons</div><div class="value" id="lessonCount">12</div></div>
-              <div class="stat"><div class="label">Combo</div><div class="value" id="comboValue">3x</div></div>
+              <div class="stat">XP<br><div id="xpValue" style="font-size:1.2rem;margin-top:6px">680</div></div>
+              <div class="stat">Leçons<br><div id="lessonCount" style="font-size:1.2rem;margin-top:6px">12</div></div>
             </div>
 
-            <div class="lessons">
-              <h4>Leçons</h4>
-              <button class="lesson-item active" data-lesson="service" type="button">
-                <span class="meta"><strong>Service</strong><span class="muted">Technique</span></span>
-                <span class="xp">+120</span>
-              </button>
-              <button class="lesson-item" data-lesson="volley" type="button">
-                <span class="meta"><strong>Volley</strong><span class="muted">Réactivité</span></span>
-                <span class="xp">+160</span>
-              </button>
-              <button class="lesson-item" data-lesson="footwork" type="button">
-                <span class="meta"><strong>Footwork</strong><span class="muted">Déplacement</span></span>
-                <span class="xp">+180</span>
-              </button>
-              <button class="lesson-item" data-lesson="mental" type="button">
-                <span class="meta"><strong>Mental</strong><span class="muted">Concentration</span></span>
-                <span class="xp">+200</span>
-              </button>
-            </div>
+            <div style="margin-top:12px"><strong>Catégories Tennis</strong></div>
+            <!-- only tennis categories -->
+            <button class="lesson-item active" data-lesson="service"><div><strong>Service</strong><div class="muted">Technique & puissance</div></div><div>+120</div></button>
+            <button class="lesson-item" data-lesson="forehand"><div><strong>Forehand</strong><div class="muted">Topspin & placement</div></div><div>+100</div></button>
+            <button class="lesson-item" data-lesson="backhand"><div><strong>Backhand</strong><div class="muted">Une main / deux mains</div></div><div>+100</div></button>
+            <button class="lesson-item" data-lesson="return"><div><strong>Retour</strong><div class="muted">Anticipation</div></div><div>+110</div></button>
+            <button class="lesson-item" data-lesson="volley"><div><strong>Volley</strong><div class="muted">Filet</div></div><div>+90</div></button>
+            <button class="lesson-item" data-lesson="footwork"><div><strong>Footwork</strong><div class="muted">Déplacements</div></div><div>+130</div></button>
+            <button class="lesson-item" data-lesson="tactics"><div><strong>Tactique</strong><div class="muted">Jeu de match</div></div><div>+150</div></button>
+            <div style="margin-top:12px" class="muted">Badges</div>
+            <div id="badgeRow" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><span class="mini-unit">Nouveau</span></div>
+          </div>
+        </aside>
 
-            <div class="badge-row" id="badgeRow"></div>
-          </aside>
-
-          <main class="train-main">
-            <section class="panel pad hero">
-              <svg class="ring" viewBox="0 0 36 36" aria-label="progress">
-                <defs>
-                  <linearGradient id="ringgrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#7fe3a6" />
-                    <stop offset="100%" stop-color="#79a9ff" />
-                  </linearGradient>
-                </defs>
-                <path class="bg" d="M18 2.2a15.8 15.8 0 1 1 0 31.6 15.8 15.8 0 1 1 0-31.6"></path>
-                <path id="ringProgress" class="progress" d="M18 2.2a15.8 15.8 0 1 1 0 31.6 15.8 15.8 0 1 1 0-31.6" stroke-dasharray="100" stroke-dashoffset="0"></path>
-                <text class="value" x="18" y="18" id="ringValue">0%</text>
+        <main>
+          <div id="trainCard" class="panel animate-enter">
+            <div class="card-hero" id="cardHero">
+              <svg class="ring" viewBox="0 0 36 36" aria-hidden="true">
+                <defs><linearGradient id="g1"><stop offset="0%" stop-color="#7fe3a6"/><stop offset="100%" stop-color="#79a9ff"/></linearGradient></defs>
+                <path fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3" d="M18 2.1a15.9 15.9 0 1 1 0 31.8"></path>
+                <path id="ringProgress" fill="none" stroke="url(#g1)" stroke-width="3" stroke-linecap="round" d="M18 2.1a15.9 15.9 0 1 1 0 31.8" stroke-dasharray="100" stroke-dashoffset="0"></path>
+                <text x="18" y="20" fill="#edf4ff" font-size="5" text-anchor="middle" id="ringValue">0%</text>
               </svg>
-              <div>
-                <h1 id="heroTitle">Entraînement: service</h1>
+              <div class="hero-text">
+                <h1 id="heroTitle">Entraînement: Service</h1>
                 <p id="heroText">Travaille la rotation du tronc, le pied d’appui et le contact pour gagner en puissance sans perdre la régularité.</p>
               </div>
-            </section>
+            </div>
 
-            <section class="panel pad unit-card">
-              <div class="unit-head">
-                <div><strong>Micro-leçons</strong></div>
-                <div class="muted" id="modeLabel">Standard</div>
+            <div class="unit-card" id="unitCard">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><strong id="unitHeader">Micro-leçons</strong><div class="muted" id="modeLabel">Standard</div></div>
+                <div class="muted">Leçons aujourd'hui: <strong id="remainingCount">—</strong></div>
               </div>
 
               <div class="mini-units" id="miniUnits"></div>
 
               <div class="question">
-                <div id="questionTitle" style="font-weight:800; font-size:1.05rem;">Question...</div>
+                <div id="questionTitle" style="font-weight:900">Question...</div>
                 <div class="answers" id="answers"></div>
-                <div class="feedback" id="feedback"></div>
-                <div class="tip" id="tip"></div>
+                <div id="feedback" class="feedback"></div>
+                <div id="tip" style="display:none;margin-top:10px;padding:10px;border-radius:10px;background:rgba(121,169,255,0.06);border:1px solid rgba(121,169,255,0.08);color:var(--muted)"></div>
               </div>
 
               <div class="controls">
-                <button type="button" class="btn ghost" id="practiceBtn">Mode pratique</button>
-                <button type="button" class="btn ghost" id="skipBtn">Suivant</button>
-                <button type="button" class="btn primary" id="completeBtn">Valider</button>
+                <button id="practiceBtn" class="btn ghost">Mode pratique</button>
+                <div style="flex:1"></div>
+                <button id="skipBtn" class="btn ghost">Suivant</button>
+                <button id="completeBtn" class="btn primary">Valider</button>
               </div>
-              <div class="muted" style="margin-top:10px;">Leçons restantes aujourd’hui : <strong id="remainingCount">—</strong></div>
-            </section>
-          </main>
-        </div>
-      </section>
-
-      <section id="screen-leaderboard" class="screen">
-        <div class="panel pad" style="margin-top:18px;">
-          <h2>Leaderboard</h2>
-          <div id="leaderboardList" class="lead-list"></div>
-        </div>
-      </section>
-
-      <section id="screen-max" class="screen">
-        <div class="panel pad" style="margin-top:18px;">
-          <div class="max-card">
-            <div class="muted">Max</div>
-            <div class="price">À partir de 5€/mois</div>
-            <ul class="list">
-              <li>Pas de pub</li>
-              <li>Pass leçon infinie</li>
-              <li>Badges bonus</li>
-              <li>Suivi premium</li>
-            </ul>
-            <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn primary" type="button" onclick="window.location.href='subscription.html'">S’abonner</button>
-              <button class="btn ghost" type="button" onclick="document.getElementById('screen-max').classList.remove('active'); document.getElementById('screen-train').classList.add('active')">Retour</button>
             </div>
           </div>
-        </div>
+
+        </main>
       </section>
 
-      <section id="screen-schools" class="screen">
-        <div class="panel pad" style="margin-top:18px;">
-          <h2>Schools & Éval Team</h2>
-          <div class="two-col">
-            <div class="school-card">
-              <strong>School 1</strong>
-              <p class="muted">Club d’initiation — niveau junior</p>
-              <button class="btn ghost" type="button">Voir le programme</button>
-            </div>
-            <div class="school-card">
-              <strong>Éval Team</strong>
-              <p class="muted">Bilan technique + plan d’entrainement</p>
-              <button class="btn ghost" type="button">Évaluer</button>
-            </div>
-            <div class="school-card">
-              <strong>School 2</strong>
-              <p class="muted">Performance / service / footwork</p>
-              <button class="btn ghost" type="button">Suivre</button>
-            </div>
-            <div class="school-card">
-              <strong>Équipe développement</strong>
-              <p class="muted">Suivi groupe / objectif collectif</p>
-              <button class="btn ghost" type="button">Détails</button>
-            </div>
+      <!-- finish modal -->
+      <div id="finishModal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-card">
+          <div style="font-size:36px">🎉</div>
+          <h3 id="modalTitle">Leçon terminée</h3>
+          <div id="modalXp" style="font-weight:900;margin-top:8px">+100 XP</div>
+          <div class="modal-badges" id="modalBadges"></div>
+          <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
+            <button id="continueBtn" class="btn primary">Continuer</button>
+            <button id="toCategoryBtn" class="btn ghost">Voir la catégorie</button>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section id="screen-profile" class="screen">
-        <div class="panel pad" style="margin-top:18px;">
-          <h2>Profil</h2>
-          <div class="profile-card">
-            <div class="row"><span class="muted">Nom</span><strong id="profileName">Joueur</strong></div>
-            <div class="row"><span class="muted">Abonnement</span><strong id="profileSubscription">Gratuit</strong></div>
-            <div class="row"><span class="muted">Niveau</span><strong id="profileLevel">Junior</strong></div>
-            <div class="row"><span class="muted">Dernière leçon</span><strong id="profileLastLesson">Service</strong></div>
-          </div>
-          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn ghost" type="button" onclick="alert('Gestion du profil')">Modifier le profil</button>
-            <button class="btn primary" type="button" onclick="window.location.href='subscription.html'">Gérer Max</button>
-          </div>
-        </div>
-      </section>
+      <nav class="bottom-nav" aria-label="Navigation principale">
+        <button class="nav-btn active" data-target="train">🏋️<div style="font-size:11px">Train</div></button>
+        <button class="nav-btn" data-target="leaderboard">🏆<div style="font-size:11px">Leaderboard</div></button>
+        <button class="nav-btn" data-target="max">⭐<div style="font-size:11px">Max</div></button>
+        <button class="nav-btn" data-target="schools">🏫<div style="font-size:11px">Schools</div></button>
+        <button class="nav-btn" data-target="profile">👤<div style="font-size:11px">Profil</div></button>
+      </nav>
     </div>
 
-    <nav class="bottom-nav" aria-label="Navigation principale">
-      <button class="nav-btn active" type="button" data-target="screen-train"><span class="icon">🏋️</span><span class="label">Train</span></button>
-      <button class="nav-btn" type="button" data-target="screen-leaderboard"><span class="icon">🏆</span><span class="label">Leaderboard</span></button>
-      <button class="nav-btn" type="button" data-target="screen-max"><span class="icon">⭐</span><span class="label">Max</span></button>
-      <button class="nav-btn" type="button" data-target="screen-schools"><span class="icon">🏫</span><span class="label">Schools</span></button>
-      <button class="nav-btn" type="button" data-target="screen-profile"><span class="icon">👤</span><span class="label">Profil</span></button>
-    </nav>
-
     <script>
+      // Expanded tennis-only lessons with many micro-units (rempli au max)
       const lessons = {
-        service: {
-          title: 'Service',
-          theme: 'Technique',
-          hero: 'Travaille la rotation du tronc, le pied d’appui et le contact pour gagner en puissance sans perdre la régularité.',
-          units: [
-            { title: 'Position', question: 'Quel pied doit être en avant pour un service stable ?', answers: ['Pied avant naturel', 'Pied arrière', 'Les deux pieds de même côté', 'Aucun pied'], correct: 0, tip: 'Le pied avant donne votre équilibre et votre orientation.' },
-            { title: 'Lancer', question: 'Où lancer la balle ?', answers: ['À hauteur du visage', 'Devant le corps, légèrement au-dessus', 'Près du sol', 'Au fond du court'], correct: 1, tip: 'Le lancer doit être dans le prolongement du contact.' },
-            { title: 'Rotation', question: 'Que permet la rotation du tronc ?', answers: ['Plus de puissance', 'Moins de puissance', 'Rien du tout', 'Ralentir la balle'], correct: 0, tip: 'Elle aide à transférer l’énergie du bas vers le bras.' }
-          ]
-        },
-        volley: {
-          title: 'Volley',
-          theme: 'Réactivité',
-          hero: 'Le volley demande vitesse, vigilance et position compacte pour finir les points vite.',
-          units: [
-            { title: 'Distance', question: 'Que faut-il faire avant une volée ?', answers: ['Se placer près du filet', 'S’éloigner du filet', 'Fixer la ligne de fond', 'Reculer pour préparer le service'], correct: 0, tip: 'La proximité au filet réduit le temps de réaction adverse.' },
-            { title: 'Poids', question: 'Où garder le poids du corps ?', answers: ['Sur les deux pieds', 'Sur le pied avant', 'Sur les talons', 'Sur le bras'], correct: 1, tip: 'L’équilibre sur le pied avant favorise la stabilité.' }
-          ]
-        },
-        footwork: {
-          title: 'Footwork',
-          theme: 'Déplacement',
-          hero: 'Les pieds créent la qualité du coup : équilibre, timing et placement.',
-          units: [
-            { title: 'Premier pas', question: 'Le premier pas doit être ?', answers: ['Rapide et contrôlé', 'Lent', 'Très large', 'Tranquille sans direction'], correct: 0, tip: 'Le premier pas doit être court, explosif et orienté.' }
-          ]
-        },
-        mental: {
-          title: 'Mental',
-          theme: 'Concentration',
-          hero: 'Le tennis est un jeu de concentration, respiration et routines.',
-          units: [
-            { title: 'Respiration', question: 'Avant un point décisif, le bon réflexe est ?', answers: ['Respirer et recentrer', 'Jouer plus vite sans réfléchir', 'Ne rien faire', 'Prendre une pause de 5 minutes'], correct: 0, tip: 'La respiration calme le stress et réduit les erreurs.' }
-          ]
-        }
+        service: { title:'Service', hero:"Puissance & précision", units:[
+          {title:'Position', question:'Quel pied doit être en avant pour un service stable ?', answers:['Pied avant naturel','Pied arrière','Les deux pieds de même côté','Aucun pied'], correct:0, tip:'Pied avant pour l’équilibre.'},
+          {title:'Lancer', question:'Où lancer la balle pour un service plat ?', answers:['Devant le corps','Près du corps','Trop sur la gauche','Trop bas'], correct:0, tip:'Lancer devant et légèrement au-dessus du front.'},
+          {title:'Rotation', question:'La rotation du tronc apporte ?', answers:['Plus de puissance','Plus de contrôle uniquement','Rien','Perte d’équilibre'], correct:0, tip:'Transfert d’énergie du bas vers le bras.'},
+          {title:'Contact', question:'Le contact doit être ?', answers:['Devant le corps','Derrière','Près du sol','À gauche du corps'], correct:0, tip:'Contact devant pour accélérer le bras.'},
+          {title:'Suivi', question:'Après contact, le bras doit ?', answers:['Suivre haut','S’arrêter net','Tomber bas','Faire un cercle'], correct:0, tip:'Suivi haut pour direction et spin.'}
+        ]},
+        forehand: { title:'Forehand', hero:'Topspin & placement', units:[
+          {title:'Grip', question:'Prise la plus courante pour topspin ?', answers:['Semi-western','Eastern','Continental','Western'], correct:0, tip:'Semi-western pour topspin moderne.'},
+          {title:'Bascule', question:'La préparation commence par ?', answers:['Rotation du buste','Tirer le bras vers l’arrière','Sauter','Lancer la balle'], correct:0, tip:'Rotation et préparation du pied.'},
+          {title:'Contact', question:'Où frapper la balle ?', answers:['Un peu en avant','Très en arrière','Près du corps','N’importe où'], correct:0, tip:'Un point de contact stable devant le corps.'}
+        ]},
+        backhand: { title:'Backhand', hero:'Contrôle & régularité', units:[
+          {title:'Deux mains', question:'Avantage de deux mains ?', answers:['Plus de contrôle','Moins de contrôle','Plus lent','Moins stable'], correct:0, tip:'Contrôle et puissance pour revers à deux mains.'},
+          {title:'Un main', question:'Avantage du revers à une main ?', answers:['Plus d’extension','Plus de topspin simple','Moins de portée','Nulle'], correct:0, tip:'Plus d’extension et variété.'}
+        ]},
+        volley: { title:'Volley', hero:'Jeu au filet', units:[
+          {title:'Position', question:'Où se placer pour une volée ?', answers:['Près du filet','Au fond du court','Sur la ligne latérale','Dans les tribunes'], correct:0, tip:'Proche du filet pour réduire le temps de réaction.'},
+          {title:'Prise', question:'Type de prise courante ?', answers:['Continental','Eastern','Western','Semi-western'], correct:0, tip:'Continental facilite les volées.'}
+        ]},
+        footwork: { title:'Footwork', hero:'Déplacement & équilibre', units:[
+          {title:'Premier pas', question:'Le premier pas doit être ?', answers:['Court et explosif','Long et lent','Indifférent','En arrière'], correct:0, tip:'Orientation et explosivité.'},
+          {title:'Position', question:'Pieds doivent être ?', answers:['Écartés et stables','Collés','Sur les pointes seulement','Les bras'], correct:0, tip:'Base stable pour frapper.'}
+        ]},
+        return: { title:'Retour', hero:'Anticipation & placement', units:[
+          {title:'Lecture', question:'Regarder avant ou la raquette adverse ?', answers:['La raquette','Le pied','Le public','Le ciel'], correct:0, tip:'Lire la préparation adverse.'},
+          {title:'Placement', question:'Où viser sur un bon retour ?', answers:['Milieu-court','Court-ligne','Trop long','En l’air'], correct:0, tip:'Viser le court pour casser le rythme.'}
+        ]},
+        tactics: { title:'Tactique', hero:'Planification de match', units:[
+          {title:'Stratégie', question:'Que faire contre un joueur agressif ?', answers:['Varier l’effet','Lui laisser le rythme','Ne pas bouger','Crier'], correct:0, tip:'Varier pour casser le timing adverse.'},
+          {title:'Zone', question:'Exploiter la faiblesse ?', answers:['Viser la faiblesse','Toujours frapper fort','Servir trop haut','Ne pas servir'], correct:0, tip:'Attaquer les zones faibles.'}
+        ]}
       };
 
-      const userName = document.getElementById('userName');
-      const avatarInitial = document.getElementById('avatarInitial');
+      // state
+      const state = { currentLesson:'service', currentUnit:0, answered:false, practice:false };
+
+      // DOM refs
       const xpValue = document.getElementById('xpValue');
-      const accuracyValue = document.getElementById('accuracyValue');
       const lessonCount = document.getElementById('lessonCount');
-      const comboValue = document.getElementById('comboValue');
       const badgeRow = document.getElementById('badgeRow');
-      const streakCount = document.getElementById('streakCount');
       const ringProgress = document.getElementById('ringProgress');
       const ringValue = document.getElementById('ringValue');
+      const heroTitle = document.getElementById('heroTitle');
+      const heroText = document.getElementById('heroText');
+      const miniUnitsWrap = document.getElementById('miniUnits');
+      const questionTitle = document.getElementById('questionTitle');
+      const answersWrap = document.getElementById('answers');
+      const feedback = document.getElementById('feedback');
+      const tipEl = document.getElementById('tip');
+      const finishModal = document.getElementById('finishModal');
+      const modalXp = document.getElementById('modalXp');
+      const modalBadges = document.getElementById('modalBadges');
+      const cardHero = document.getElementById('cardHero');
 
-      const state = {
-        currentLesson: 'service',
-        currentUnit: 0,
-        answered: false,
-        practice: false
-      };
+      // local storage helpers
+      function getTodayKey(){return 'tr_daily_'+new Date().toISOString().slice(0,10)}
+      function getDailyUsed(){return Number(localStorage.getItem(getTodayKey())||'0')}
+      function incDailyUsed(){const k=getTodayKey();const n=getDailyUsed()+1;localStorage.setItem(k,String(n));return n}
 
-      function isSubscribed() {
-        const flag = localStorage.getItem('tr_subscribed');
-        if (flag === 'true') {
-          const until = localStorage.getItem('tr_subscribed_until');
-          if (!until) return true;
-          return new Date(until) > new Date();
-        }
-        return false;
-      }
+      function updateProgressRing(value){ringProgress.style.strokeDasharray='100';ringProgress.style.strokeDashoffset=String(100-value);ringValue.textContent=value+'%'}
 
-      function getTodayKey() {
-        return 'tr_daily_' + new Date().toISOString().slice(0,10);
-      }
-      function getDailyUsed() {
-        return Number(localStorage.getItem(getTodayKey()) || '0');
-      }
-      function incDailyUsed() {
-        const key = getTodayKey();
-        const next = getDailyUsed() + 1;
-        localStorage.setItem(key, String(next));
-        return next;
-      }
+      function setLessonActiveButtons(){document.querySelectorAll('.lesson-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.lesson===state.currentLesson))}
 
-      function updateStreak() {
-        const today = new Date().toISOString().slice(0,10);
-        const last = localStorage.getItem('tr_last_active');
-        let streak = Number(localStorage.getItem('tr_streak') || '0');
-        if (!last) {
-          streak = 1;
-        } else if (last === today) {
-          streak = streak || 1;
-        } else if (last === new Date(Date.now() - 86400000).toISOString().slice(0,10)) {
-          streak += 1;
-        } else {
-          streak = 1;
-        }
-        localStorage.setItem('tr_streak', String(streak));
-        localStorage.setItem('tr_last_active', today);
-        streakCount.textContent = String(streak);
-      }
+      function renderMiniUnits(){miniUnitsWrap.innerHTML='';const units=lessons[state.currentLesson].units;const prog=Number(localStorage.getItem('prog_'+state.currentLesson)||'0');units.forEach((u,i)=>{const d=document.createElement('div');d.className='mini-unit'+(i<prog?' done':'');d.textContent=(i+1)+'. '+u.title;d.addEventListener('click',()=>{state.currentUnit=i; animateCard();renderQuestion();});miniUnitsWrap.appendChild(d)})}
 
-      function renderBadges() {
-        const badges = JSON.parse(localStorage.getItem('tr_badges') || '[]');
-        badgeRow.innerHTML = badges.length ? badges.map(b => '<span class="badge">'+b+'</span>').join('') : '<span class="badge">Nouveau</span>';
-      }
+      function renderQuestion(){const lesson=lessons[state.currentLesson];const unit=lesson.units[state.currentUnit];state.answered=false;questionTitle.textContent=unit.question;answersWrap.innerHTML='';feedback.textContent='';tipEl.style.display='none';unit.answers.forEach((a,idx)=>{const b=document.createElement('button');b.type='button';b.className='answer-btn';b.textContent=a;b.addEventListener('click',()=>handleAnswer(idx));answersWrap.appendChild(b)});const prog=Number(localStorage.getItem('prog_'+state.currentLesson)||'0');updateProgressRing(Math.round((prog/lesson.units.length)*100));}
 
-      function awardBadge(name) {
-        const badges = JSON.parse(localStorage.getItem('tr_badges') || '[]');
-        if (!badges.includes(name)) {
-          badges.push(name);
-          localStorage.setItem('tr_badges', JSON.stringify(badges));
-          renderBadges();
-        }
-      }
+      function animateCard(){const el=document.getElementById('trainCard');el.classList.remove('animate-enter');void el.offsetWidth;el.classList.add('animate-enter')}
 
-      function updateProgressRing(value) {
-        ringProgress.style.strokeDasharray = '100';
-        ringProgress.style.strokeDashoffset = String(100 - value);
-        ringValue.textContent = value + '%';
-      }
+      function handleAnswer(idx){if(state.answered)return;state.answered=true;const unit=lessons[state.currentLesson].units[state.currentUnit];const btns=document.querySelectorAll('.answer-btn');btns.forEach((b,i)=>{b.disabled=true;if(i===unit.correct)b.classList.add('correct');if(i===idx && i!==unit.correct)b.classList.add('wrong')});if(idx===unit.correct){feedback.textContent='Bonne réponse !';feedback.style.color='#7fe3a6';const xp=Number(xpValue.textContent)+40;xpValue.textContent=String(xp);const prog=Number(localStorage.getItem('prog_'+state.currentLesson)||'0');if(state.currentUnit>=prog)localStorage.setItem('prog_'+state.currentLesson,String(Math.min(prog+1,lessons[state.currentLesson].units.length)));tipEl.textContent=unit.tip;tipEl.style.display='block';spawnConfetti();awardBadge('Finisher '+lessons[state.currentLesson].title)}else{feedback.textContent='Presque — essaye la prochaine fois.';feedback.style.color='#ff8a80'}renderMiniUnits();}
 
-      function renderLessonList() {
-        document.querySelectorAll('.lesson-item').forEach((item) => {
-          item.classList.toggle('active', item.dataset.lesson === state.currentLesson);
-        });
-      }
+      function spawnConfetti(){const canvas=document.createElement('canvas');canvas.width=innerWidth;canvas.height=innerHeight;canvas.style.position='fixed';canvas.style.left='0';canvas.style.top='0';canvas.style.zIndex=9999;canvas.style.pointerEvents='none';document.body.appendChild(canvas);const ctx=canvas.getContext('2d');const pieces=[];for(let i=0;i<60;i++)pieces.push({x:Math.random()*canvas.width,y:Math.random()*-canvas.height,vx:(Math.random()-0.5)*6,vy:Math.random()*4+3,size:Math.random()*8+4,color:['#79a9ff','#7fe3a6','#ffd76c','#ffb778'][Math.floor(Math.random()*4)]});let raf;function f(){ctx.clearRect(0,0,canvas.width,canvas.height);for(const p of pieces){p.x+=p.vx;p.y+=p.vy;ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,p.size,p.size*1.3)}if(pieces.some(p=>p.y<canvas.height+20))raf=requestAnimationFrame(f);else{cancelAnimationFrame(raf);canvas.remove()}}f()}
 
-      function getUnitProgress() {
-        const key = 'tr_prog_' + state.currentLesson;
-        return Number(localStorage.getItem(key) || '0');
-      }
-      function setUnitProgress(n) {
-        localStorage.setItem('tr_prog_' + state.currentLesson, String(n));
-      }
+      function awardBadge(name){const badges=JSON.parse(localStorage.getItem('tr_badges')||'[]');if(!badges.includes(name)){badges.push(name);localStorage.setItem('tr_badges',JSON.stringify(badges));renderBadges();showModalBadge(name)}}
+      function renderBadges(){const badges=JSON.parse(localStorage.getItem('tr_badges')||'[]');badgeRow.innerHTML=badges.length?badges.map(b=>'<span class="mini-unit done">'+b+'</span>').join(' '):'<span class="mini-unit">Nouveau</span>'}
 
-      function renderMiniUnits() {
-        const units = lessons[state.currentLesson].units;
-        const wrap = document.getElementById('miniUnits');
-        wrap.innerHTML = '';
-        units.forEach((u, i) => {
-          const node = document.createElement('div');
-          const done = i < getUnitProgress();
-          node.className = 'mini-unit' + (done ? ' done' : '');
-          node.textContent = (i + 1) + '. ' + u.title;
-          node.addEventListener('click', () => {
-            state.currentUnit = i; renderQuestion();
-          });
-          wrap.appendChild(node);
-        });
-      }
+      function showModalBadge(name){modalBadges.innerHTML='<div style="padding:6px 10px;border-radius:8px;background:linear-gradient(90deg,#ffd76c,#ffb778);font-weight:900">'+name+'</div>';setTimeout(()=>modalBadges.innerHTML='',2200)}
 
-      function renderQuestion() {
-        const lesson = lessons[state.currentLesson];
-        const unit = lesson.units[state.currentUnit];
-        state.answered = false;
-        document.getElementById('questionTitle').textContent = unit.question;
-        const answers = document.getElementById('answers');
-        answers.innerHTML = '';
-        document.getElementById('feedback').textContent = '';
-        document.getElementById('feedback').className = 'feedback';
-        document.getElementById('tip').style.display = 'none';
-        document.getElementById('tip').textContent = '';
+      function openFinishModal(xp, badges){modalXp.textContent='+'+xp+' XP';modalBadges.innerHTML=badges.map(b=>'<div style="padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.04);font-weight:900">'+b+'</div>').join('');finishModal.classList.add('show');finishModal.setAttribute('aria-hidden','false')}
+      function closeFinishModal(){finishModal.classList.remove('show');finishModal.setAttribute('aria-hidden','true')}
 
-        unit.answers.forEach((answer, index) => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'answer-btn';
-          btn.textContent = answer;
-          btn.addEventListener('click', () => handleAnswer(index));
-          answers.appendChild(btn);
-        });
+      // handle lesson completion with modal and transitions
+      document.getElementById('completeBtn').addEventListener('click',()=>{
+        // quota check
+        const limit=3;const used=getDailyUsed();if(!localStorage.getItem('tr_subscribed') && used>=limit){alert('Quota gratuit atteint. Passez à Max.');return}
+        if(!localStorage.getItem('tr_subscribed'))incDailyUsed();const xpGained=100;xpValue.textContent=String(Number(xpValue.textContent)+xpGained);lessonCount.textContent=String(Number(lessonCount.textContent)+1);const badgeName='Complété '+lessons[state.currentLesson].title;awardBadge(badgeName);openFinishModal(xpGained,[badgeName]);updateProgressRing(100);});
 
-        const progressPct = Math.round((getUnitProgress() / lesson.units.length) * 100);
-        updateProgressRing(progressPct);
-      }
+      document.getElementById('skipBtn').addEventListener('click',()=>{const keys=Object.keys(lessons);const idx=keys.indexOf(state.currentLesson);const next=keys[(idx+1)%keys.length];switchLesson(next)});
+      document.getElementById('practiceBtn').addEventListener('click',()=>{state.practice=!state.practice;document.getElementById('modeLabel').textContent=state.practice?'Pratique':'Standard'});
 
-      function handleAnswer(index) {
-        if (state.answered) return;
-        state.answered = true;
-        const lesson = lessons[state.currentLesson];
-        const unit = lesson.units[state.currentUnit];
-        const buttons = document.querySelectorAll('.answer-btn');
-        buttons.forEach((btn, i) => {
-          btn.disabled = true;
-          if (i === unit.correct) btn.classList.add('correct');
-          if (i === index && i !== unit.correct) btn.classList.add('wrong');
-        });
+      document.getElementById('continueBtn').addEventListener('click',()=>{closeFinishModal();const keys=Object.keys(lessons);const idx=keys.indexOf(state.currentLesson);const next=keys[(idx+1)%keys.length];switchLesson(next)});
+      document.getElementById('toCategoryBtn').addEventListener('click',()=>{closeFinishModal();renderLessonListUI()});
 
-        const feedback = document.getElementById('feedback');
-        const tip = document.getElementById('tip');
-        if (index === unit.correct) {
-          feedback.textContent = 'Bonne réponse ! +40 XP';
-          feedback.className = 'feedback good';
-          const xp = Number(xpValue.textContent) + 40;
-          xpValue.textContent = String(xp);
-          const doneCount = getUnitProgress();
-          if (state.currentUnit >= doneCount) {
-            setUnitProgress(Math.min(doneCount + 1, lesson.units.length));
-          }
-          if (state.currentUnit === lesson.units.length - 1) {
-            awardBadge('Finisher ' + lesson.title);
-          }
-          tip.textContent = unit.tip;
-          tip.style.display = 'block';
-          spawnConfetti();
-          playTone(880, 120, 0.05);
-        } else {
-          feedback.textContent = 'Presque ! La bonne réponse est affichée.';
-          feedback.className = 'feedback bad';
-          playTone(220, 200, 0.05);
-        }
-        renderMiniUnits();
-      }
+      // nav switches (simple screens for now)
+      document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');const t=b.dataset.target; if(t!=='train')alert('Onglet "'+t+'" - prototype local (fonctionnalités basiques)')}));
 
-      function playTone(freq, duration, volume) {
-        const AudioCtor = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtor) return;
-        const ctx = new AudioCtor();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        gain.gain.value = volume;
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        setTimeout(() => { osc.stop(); ctx.close(); }, duration);
-      }
+      // lesson list click
+      document.querySelectorAll('.lesson-item').forEach(b=>b.addEventListener('click',()=>switchLesson(b.dataset.lesson)));
 
-      function spawnConfetti() {
-        const canvas = document.createElement('canvas');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        canvas.style.position = 'fixed';
-        canvas.style.left = '0';
-        canvas.style.top = '0';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.zIndex = '9999';
-        document.body.appendChild(canvas);
-        const ctx = canvas.getContext('2d');
-        const pieces = [];
-        for (let i = 0; i < 80; i++) {
-          pieces.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * -canvas.height,
-            vx: (Math.random() - 0.5) * 7,
-            vy: Math.random() * 4 + 4,
-            size: Math.random() * 7 + 3,
-            color: ['#79a9ff', '#7fe3a6', '#ffd76c', '#ffb778'][Math.floor(Math.random() * 4)]
-          });
-        }
-        let raf;
-        function frame() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          for (const p of pieces) {
-            p.x += p.vx;
-            p.y += p.vy;
-            ctx.fillStyle = p.color;
-            ctx.fillRect(p.x, p.y, p.size, p.size * 1.4);
-          }
-          if (pieces.some(p => p.y < canvas.height + 20)) raf = requestAnimationFrame(frame);
-          else {
-            cancelAnimationFrame(raf);
-            canvas.remove();
-          }
-        }
-        frame();
-      }
+      function switchLesson(key){if(!lessons[key])return; // animate exit
+        const el=document.getElementById('trainCard');el.classList.remove('animate-enter');el.classList.add('animate-exit');setTimeout(()=>{state.currentLesson=key;state.currentUnit=0;renderLessonListUI();renderMiniUnits();renderQuestion();heroTitle.textContent='Entraînement: '+lessons[key].title;heroText.textContent=lessons[key].hero;el.classList.remove('animate-exit');animateCard()},220)}
 
-      function renderScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.target === id));
+      function renderLessonListUI(){setLessonActiveButtons();renderBadges();}
 
-        if (id === 'screen-leaderboard') renderLeaderboard();
-        if (id === 'screen-profile') {
-          document.getElementById('profileName').textContent = userName.textContent;
-          document.getElementById('profileSubscription').textContent = isSubscribed() ? 'Max / Abonné' : 'Gratuit';
-          document.getElementById('profileLevel').textContent = document.getElementById('userLevel').textContent.replace('Niveau ', '');
-          document.getElementById('profileLastLesson').textContent = lessons[state.currentLesson].title;
-        }
-      }
+      // initial render
+      function init(){const storedPseudo=localStorage.getItem('tr_pseudo')||'Joueur';document.getElementById('userName').textContent=storedPseudo;document.getElementById('avatarInitial').textContent=storedPseudo.charAt(0).toUpperCase();renderLessonListUI();renderMiniUnits();renderQuestion();updateProgressRing( Math.round((Number(localStorage.getItem('prog_'+state.currentLesson)||'0')/lessons[state.currentLesson].units.length)*100) )}
 
-      function renderLeaderboard() {
-        const lb = JSON.parse(localStorage.getItem('tr_lb') || '[]');
-        const list = document.getElementById('leaderboardList');
-        if (!lb.length) {
-          list.innerHTML = '<div class="leader-card">Aucun classement pour le moment.</div>';
-          return;
-        }
-        list.innerHTML = lb
-          .slice(0, 5)
-          .map((entry, i) => {
-            const classes = ['gold', 'silver', 'bronze'];
-            const cls = i < 3 ? classes[i] : '';
-            return `
-              <div class="leader-card">
-                <div class="leader-item">
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <div class="rank ${cls}">${i + 1}</div>
-                    <div><strong>${entry.name}</strong></div>
-                  </div>
-                  <div><strong>${entry.xp} XP</strong></div>
-                </div>
-              </div>
-            `;
-          }).join('');
-      }
+      // finish modal close on backdrop
+      finishModal.addEventListener('click', (e)=>{if(e.target===finishModal)closeFinishModal()})
 
-      function renderUser() {
-        const storedPseudo = localStorage.getItem('tr_pseudo') || 'Joueur';
-        userName.textContent = storedPseudo;
-        avatarInitial.textContent = storedPseudo.charAt(0).toUpperCase();
-        document.getElementById('profileName').textContent = storedPseudo;
-      }
+      // local leaderboard / badges storage hooks
+      init();
 
-      function updateRemaining() {
-        if (isSubscribed()) {
-          document.getElementById('remainingCount').textContent = '∞';
-          document.getElementById('completeBtn').disabled = false;
-          return;
-        }
-        const limit = 3;
-        const remaining = Math.max(limit - getDailyUsed(), 0);
-        document.getElementById('remainingCount').textContent = String(remaining);
-        document.getElementById('completeBtn').disabled = remaining <= 0;
-      }
-
-      function loadLesson(key) {
-        state.currentLesson = key;
-        state.currentUnit = 0;
-        renderLessonList();
-        const lesson = lessons[key];
-        document.getElementById('heroTitle').textContent = 'Entraînement: ' + lesson.title.toLowerCase();
-        document.getElementById('heroText').textContent = lesson.hero;
-        document.getElementById('modeLabel').textContent = state.practice ? 'Pratique' : 'Standard';
-        renderMiniUnits();
-        renderQuestion();
-        updateProfile();
-      }
-
-      function updateProfile() {
-        document.getElementById('profileLastLesson').textContent = lessons[state.currentLesson].title;
-      }
-
-      function handleLessonComplete() {
-        if (!isSubscribed()) {
-          const remaining = 3 - getDailyUsed();
-          if (remaining <= 0) {
-            alert('Quota gratuit atteint. Passez en Max pour débloquer le pass leçon illimité.');
-            renderScreen('screen-max');
-            return;
-          }
-          incDailyUsed();
-        }
-        const xp = Number(xpValue.textContent) + 20;
-        xpValue.textContent = String(xp);
-        lessonCount.textContent = String(Number(lessonCount.textContent) + 1);
-        comboValue.textContent = String(Number(comboValue.textContent.replace('x','')) + 1) + 'x';
-        const current = lessons[state.currentLesson];
-        awardBadge('Complété ' + current.title);
-        renderBadges();
-        updateRemaining();
-        const lb = JSON.parse(localStorage.getItem('tr_lb') || '[]');
-        const name = localStorage.getItem('tr_pseudo') || 'Joueur';
-        const existing = lb.find(x => x.name === name);
-        if (existing) existing.xp = Number(xpValue.textContent);
-        else lb.push({ name, xp: Number(xpValue.textContent) });
-        lb.sort((a, b) => b.xp - a.xp);
-        localStorage.setItem('tr_lb', JSON.stringify(lb.slice(0, 10)));
-        renderLeaderboard();
-        document.getElementById('feedback').textContent = 'Leçon validée !';
-        document.getElementById('feedback').className = 'feedback good';
-      }
-
-      document.querySelectorAll('.lesson-item').forEach((btn) => {
-        btn.addEventListener('click', () => loadLesson(btn.dataset.lesson));
-      });
-
-      document.getElementById('skipBtn').addEventListener('click', () => {
-        const keys = Object.keys(lessons);
-        const idx = keys.indexOf(state.currentLesson);
-        const nextIndex = (idx + 1) % keys.length;
-        loadLesson(keys[nextIndex]);
-      });
-
-      document.getElementById('practiceBtn').addEventListener('click', () => {
-        state.practice = !state.practice;
-        document.getElementById('modeLabel').textContent = state.practice ? 'Pratique' : 'Standard';
-      });
-
-      document.getElementById('completeBtn').addEventListener('click', handleLessonComplete);
-
-      document.querySelectorAll('.nav-btn').forEach((btn) => {
-        btn.addEventListener('click', () => renderScreen(btn.dataset.target));
-      });
-
-      (function init() {
-        renderUser();
-        renderBadges();
-        updateStreak();
-        updateRemaining();
-        renderScreen('screen-train');
-        loadLesson('service');
-      })();
     </script>
   </body>
 </html>
