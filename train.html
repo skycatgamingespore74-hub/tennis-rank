@@ -212,6 +212,10 @@
       .button.secondary {
         background: rgba(255,255,255,0.03); border: 1px solid var(--line); color: var(--text);
       }
+      .ad-banner{
+        margin-top:14px;padding:12px;border-radius:12px;background:linear-gradient(90deg,#fff2 0%, #fff0 100%);color:#dfe8ff;border:1px dashed rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;gap:10px
+      }
+      .sub-note{font-size:.9rem;color:var(--muted)}
       @media (max-width: 900px) {
         .layout { grid-template-columns: 1fr; }
         .hero { grid-template-columns: 1fr; }
@@ -234,6 +238,8 @@
           <a href="levels.html">Niveaux</a>
           <a href="assessment.html">Évaluation</a>
           <button class="pill" type="button" id="logoutBtn">Déconnexion</button>
+          <a href="subscription.html" id="subscribePill" class="pill" style="display:none">S'abonner · À partir de 5€/mois</a>
+          <span id="subBadge" class="pill" style="display:none">Abonné</span>
         </nav>
       </header>
 
@@ -300,6 +306,16 @@
             </div>
           </section>
 
+          <div id="adArea" class="ad-banner" style="display:none">
+            <div>
+              <strong>Publicité</strong>
+              <div class="sub-note">Contenu sponsorisé — passez à l'offre à partir de 5€/mois pour supprimer les pubs et obtenir le pass leçon infinie.</div>
+            </div>
+            <div>
+              <a href="subscription.html" class="pill">S'abonner</a>
+            </div>
+          </div>
+
           <section class="module">
             <div class="module-head">
               <h2>Quiz rapide</h2>
@@ -326,6 +342,7 @@
               <button class="button secondary" type="button" id="skipBtn">Suivant</button>
               <button class="button" type="button" id="completeBtn">Valider la leçon</button>
             </div>
+            <div style="margin-top:10px"><span class="small">Leçons restantes aujourd'hui: <strong id="remainingCount">—</strong></span></div>
           </section>
         </main>
       </div>
@@ -412,10 +429,72 @@
       const accuracyValue = document.getElementById('accuracyValue');
       const lessonCount = document.getElementById('lessonCount');
       const comboValue = document.getElementById('comboValue');
+      const adArea = document.getElementById('adArea');
+      const subscribePill = document.getElementById('subscribePill');
+      const subBadge = document.getElementById('subBadge');
+      const remainingCountEl = document.getElementById('remainingCount');
 
       const user = localStorage.getItem('tr_pseudo') || 'Joueur';
       userName.textContent = user;
       avatarInitial.textContent = user.charAt(0).toUpperCase();
+
+      // Subscription handling
+      function isSubscribed(){
+        try{
+          const s = localStorage.getItem('tr_subscribed');
+          if (s === 'true') {
+            const until = localStorage.getItem('tr_subscribed_until');
+            if (!until) return true; // safety
+            const expiry = new Date(until);
+            return expiry > new Date();
+          }
+          return false;
+        } catch(e){ return false }
+      }
+
+      function updateSubscriptionUI(){
+        if (isSubscribed()){
+          adArea.style.display = 'none';
+          subscribePill.style.display = 'none';
+          subBadge.style.display = 'inline-block';
+        } else {
+          adArea.style.display = 'flex';
+          subscribePill.style.display = 'inline-block';
+          subBadge.style.display = 'none';
+        }
+      }
+
+      // Daily lesson limit for non-subscribers
+      function getTodayKey(){
+        const d = new Date();
+        return 'tr_daily_used_' + d.toISOString().slice(0,10);
+      }
+      function getDailyUsed(){
+        return Number(localStorage.getItem(getTodayKey()) || '0');
+      }
+      function incrementDailyUsed(){
+        const k = getTodayKey();
+        const v = getDailyUsed() + 1;
+        localStorage.setItem(k, String(v));
+        return v;
+      }
+
+      function updateRemaining(){
+        if (isSubscribed()){
+          remainingCountEl.textContent = '∞';
+          document.getElementById('completeBtn').disabled = false;
+        } else {
+          const limit = 3; // free users: 3 lessons/day
+          const used = getDailyUsed();
+          const rem = Math.max(limit - used, 0);
+          remainingCountEl.textContent = rem;
+          if (rem <= 0) {
+            document.getElementById('completeBtn').disabled = true;
+          } else {
+            document.getElementById('completeBtn').disabled = false;
+          }
+        }
+      }
 
       let currentLesson = 'service';
       let answered = false;
@@ -465,6 +544,9 @@
           });
           answersEl.appendChild(btn);
         });
+
+        updateSubscriptionUI();
+        updateRemaining();
       }
 
       document.querySelectorAll('.lesson-item').forEach((btn) => {
@@ -483,6 +565,17 @@
       });
 
       document.getElementById('completeBtn').addEventListener('click', () => {
+        if (!isSubscribed()){
+          const limit = 3;
+          const used = getDailyUsed();
+          if (used >= limit){
+            alert('Vous avez atteint votre quota de leçons gratuites pour aujourd\'hui. Abonnez-vous pour un accès illimité.');
+            window.location.href = 'subscription.html';
+            return;
+          }
+        }
+
+        // simulate completing lesson
         const current = lessons[currentLesson];
         const score = Number(progressText.textContent.replace('%','')) + 8;
         progressText.textContent = Math.min(score, 100) + '%';
@@ -494,6 +587,16 @@
         const currentLessonCount = Number(lessonCount.textContent) + 1;
         lessonCount.textContent = currentLessonCount;
         comboValue.textContent = (Number(comboValue.textContent.replace('x','')) + 1) + 'x';
+
+        // increment daily used for non-subscribers
+        if (!isSubscribed()){
+          const v = incrementDailyUsed();
+          if (v >= 3) {
+            document.getElementById('completeBtn').disabled = true;
+            alert('Vous avez atteint votre quota gratuit. Passez à l\'offre pour un accès illimité.');
+          }
+        }
+        updateRemaining();
       });
 
       document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -502,6 +605,8 @@
         window.location.href = 'Connect.html';
       });
 
+      // Init UI
+      updateSubscriptionUI();
       renderLesson('service');
     </script>
   </body>

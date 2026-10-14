@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Abonnement — Tennis Rank</title>
+    <style>
+      :root{color-scheme:dark;--bg:#0b1020;--card:#0f1724;--accent:#79a9ff;--accent-2:#5d8dff;--muted:#aab6d5}
+      *{box-sizing:border-box}
+      body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%, #243d72, var(--bg) 60%);color:#f4f7ff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;padding:28px}
+      .card{width:min(920px,100%);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(170,190,230,0.12);border-radius:18px;padding:22px}
+      h1{margin:0 0 8px}
+      p.lead{color:var(--muted);margin:0 0 18px}
+      .plan{display:flex;gap:18px;align-items:stretch;margin-top:18px}
+      .plan .col{flex:1;padding:16px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+      .price{font-size:2rem;font-weight:900;color:var(--accent)}
+      .features{margin-top:12px}
+      .feature{display:flex;align-items:center;gap:10px;padding:8px 0}
+      .btn{display:inline-block;padding:12px 16px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#081126;font-weight:900;border:none;cursor:pointer}
+      .note{font-size:.9rem;color:var(--muted);margin-top:12px}
+      .manage{margin-top:14px}
+      .manage .link{color:#79a9ff;text-decoration:none}
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Abonnement Tennis Rank</h1>
+      <p class="lead">Passez à l'offre premium pour supprimer les pubs et obtenir le pass leçon infinie. Prix affiché : <strong>À partir de 5€/mois</strong> (simulation).</p>
+
+      <div class="plan">
+        <div class="col">
+          <div class="price">À partir de 5€/mois</div>
+          <div class="features">
+            <div class="feature">✅ Pas de publicité</div>
+            <div class="feature">✅ Pass leçon infinie (accès illimité)</div>
+            <div class="feature">✅ Support prioritaire</div>
+            <div class="feature">✅ Renouvellement mensuel (simulation)</div>
+          </div>
+
+          <div style="margin-top:14px">
+            <button id="subscribeBtn" class="btn">S'abonner — Payer 5€ / mois (simulation)</button>
+          </div>
+          <div class="note">Le paiement est simulé. Pour une intégration réelle, branchez un fournisseur de paiement (Stripe, PayPal, Google Play, Apple).</div>
+        </div>
+        <div class="col">
+          <h3>Gérer votre abonnement</h3>
+          <div class="manage">
+            <div class="note">État actuel : <strong id="subState">Non abonné</strong></div>
+            <div style="margin-top:10px">
+              <button id="cancelBtn" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)">Annuler l'abonnement (simulation)</button>
+            </div>
+            <div class="note" style="margin-top:8px">Les opérations sont simulées en local (localStorage). L'abonnement est conservé 30 jours lors de la simulation.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const subState = document.getElementById('subState');
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+
+      function updateState(){
+        const s = localStorage.getItem('tr_subscribed');
+        if (s === 'true'){
+          const until = localStorage.getItem('tr_subscribed_until');
+          subState.textContent = 'Abonné (jusqu\'au ' + (until ? new Date(until).toLocaleDateString() : '—') + ')';
+        } else {
+          subState.textContent = 'Non abonné';
+        }
+      }
+
+      subscribeBtn.addEventListener('click', () => {
+        // simulate payment flow
+        if (!confirm('Confirmer le paiement simulé de 5€ / mois ?')) return;
+        const now = new Date();
+        const until = new Date(now.getTime() + 30*24*3600*1000); // 30 days
+        localStorage.setItem('tr_subscribed', 'true');
+        localStorage.setItem('tr_subscribed_type', 'monthly');
+        localStorage.setItem('tr_subscribed_until', until.toISOString());
+        alert('Paiement simulé effectué — abonnement activé.');
+        updateState();
+        // redirect back to train
+        setTimeout(() => window.location.href = 'train.html', 600);
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        if (!confirm('Annuler l\'abonnement (simulation) ?')) return;
+        localStorage.removeItem('tr_subscribed');
+        localStorage.removeItem('tr_subscribed_type');
+        localStorage.removeItem('tr_subscribed_until');
+        alert('Abonnement annulé (simulation).');
+        updateState();
+      });
+
+      updateState();
+    </script>
+  </body>
+</html>
