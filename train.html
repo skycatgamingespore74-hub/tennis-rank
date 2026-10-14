@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Train | Tennis Rank</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --bg-2: #121b2d;
+        --panel: rgba(16, 24, 38, 0.82);
+        --panel-strong: rgba(20, 31, 46, 0.94);
+        --line: rgba(170,190,230,0.18);
+        --accent: #79a9ff;
+        --accent-2: #5d8dff;
+        --green: #7fe3a6;
+        --yellow: #f7d66b;
+        --danger: #ff8a80;
+        --text: #edf4ff;
+        --muted: #b5c0d9;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
+      body {
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #243d72 0%, var(--bg) 55%);
+        color: var(--text);
+      }
+      .page {
+        width: min(1180px, calc(100% - 28px));
+        margin: 22px auto 42px;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 20px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(9, 15, 28, 0.72);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 10px;
+        z-index: 10;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: .03em;
+      }
+      .logo {
+        width: 42px; height: 42px; border-radius: 12px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        display: grid; place-items: center;
+        box-shadow: 0 14px 28px rgba(93,141,255,.18);
+      }
+      .logo img { width: 30px; height: 30px; border-radius: 10px; }
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .nav a, .pill {
+        padding: 9px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 700;
+        background: rgba(255,255,255,0.02);
+      }
+      .pill {
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        color: #081126;
+        border: none;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 320px minmax(0, 1fr);
+        gap: 22px;
+        margin-top: 22px;
+      }
+      .sidebar, .main-panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: 0 20px 44px rgba(0,0,0,0.20);
+      }
+      .sidebar {
+        padding: 18px;
+      }
+      .profile-box {
+        background: linear-gradient(180deg, rgba(121,169,255,0.12), rgba(255,255,255,0.02));
+        border: 1px solid rgba(121,169,255,0.18);
+        border-radius: 18px;
+        padding: 16px;
+      }
+      .avatar {
+        width: 62px; height: 62px; border-radius: 16px;
+        display: grid; place-items: center;
+        background: linear-gradient(135deg, var(--yellow), #ffb678);
+        color: #1f1f1f;
+        font-weight: 900;
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+      }
+      .user-name {
+        font-size: 1.2rem; font-weight: 800; margin: 0;
+      }
+      .small { color: var(--muted); font-size: .9rem; }
+      .stats {
+        display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 10px; margin-top: 18px;
+      }
+      .stat {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 12px 10px;
+      }
+      .stat-value {
+        font-size: 1.3rem; font-weight: 800;
+      }
+      .lesson-list {
+        margin-top: 18px;
+      }
+      .lesson-item {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 10px; width: 100%; padding: 12px 12px; margin-top: 8px;
+        border-radius: 12px; border: 1px solid var(--line);
+        background: rgba(255,255,255,0.02); color: var(--text);
+        font: inherit; cursor: pointer; text-align: left;
+      }
+      .lesson-item.active {
+        background: linear-gradient(90deg, rgba(121,169,255,0.2), rgba(93,141,255,0.08));
+        border-color: rgba(121,169,255,0.44);
+      }
+      .lesson-meta {
+        display: flex; flex-direction: column; gap: 3px;
+      }
+      .xp-tag {
+        font-size: .72rem; font-weight: 800; letter-spacing: .06em;
+        text-transform: uppercase; color: #d8e5ff; background: rgba(121,169,255,0.12);
+        border-radius: 999px; padding: 6px 8px;
+      }
+      .main-panel {
+        padding: 20px;
+      }
+      .hero {
+        display: grid; grid-template-columns: 1.4fr .8fr; gap: 18px;
+        align-items: center;
+        padding: 20px; border-radius: 20px;
+        background: linear-gradient(135deg, rgba(121,169,255,0.12), rgba(93,141,255,0.06));
+        border: 1px solid rgba(121,169,255,0.2);
+      }
+      .hero h1 {
+        margin: 0 0 8px; font-size: clamp(2rem, 3vw, 2.7rem);
+      }
+      .hero p { margin: 0; color: var(--muted); line-height: 1.7; }
+      .progress-box {
+        border-radius: 18px; background: rgba(9, 15, 28, 0.8); border: 1px solid var(--line); padding: 16px;
+      }
+      .progress-top {
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+      }
+      .bar {
+        height: 12px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.04);
+      }
+      .bar span {
+        display: block; height: 100%; width: 62%; border-radius: inherit;
+        background: linear-gradient(90deg, var(--green), #7fe3d8);
+      }
+      .module {
+        margin-top: 24px;
+        border-radius: 18px; background: rgba(9,15,28,0.72); border: 1px solid var(--line);
+        padding: 18px;
+      }
+      .module-head {
+        display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 16px;
+      }
+      .module-head h2 { margin: 0; font-size: 1.28rem; }
+      .module-card {
+        display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px;
+      }
+      .exercise {
+        padding: 16px; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--line);
+      }
+      .exercise h3 { margin: 0 0 10px; font-size: 1.05rem; }
+      .answers {
+        display: grid; gap: 10px; margin-top: 14px;
+      }
+      .answer {
+        width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--text); text-align: left; font: inherit; cursor: pointer;
+      }
+      .answer.correct { background: rgba(127,227,166,0.12); border-color: rgba(127,227,166,0.38); }
+      .answer.wrong { background: rgba(255,138,128,0.10); border-color: rgba(255,138,128,0.38); }
+      .feedback {
+        min-height: 24px; margin-top: 12px; font-weight: 700;
+      }
+      .feedback.good { color: var(--green); }
+      .feedback.bad { color: var(--danger); }
+      .cta-row {
+        display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 18px; flex-wrap: wrap;
+      }
+      .button {
+        border: none; border-radius: 999px; padding: 11px 18px; font-size: .95rem; font-weight: 800; cursor: pointer; background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #081126;
+      }
+      .button.secondary {
+        background: rgba(255,255,255,0.03); border: 1px solid var(--line); color: var(--text);
+      }
+      @media (max-width: 900px) {
+        .layout { grid-template-columns: 1fr; }
+        .hero { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 560px) {
+        .module-card { grid-template-columns: 1fr; }
+        .topbar { flex-direction: column; align-items: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo"><img src="./assets/tennis-rank-logo.webp" alt="logo Tennis Rank" /></div>
+          <span>Tennis Rank</span>
+        </div>
+        <nav class="nav" aria-label="Menu principal">
+          <a href="home.html">Accueil</a>
+          <a href="levels.html">Niveaux</a>
+          <a href="assessment.html">Évaluation</a>
+          <button class="pill" type="button" id="logoutBtn">Déconnexion</button>
+        </nav>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <div class="profile-box">
+            <div class="avatar" id="avatarInitial">J</div>
+            <p class="user-name" id="userName">Joueur</p>
+            <div class="small">Niveau Junior · Streak 6 jours</div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="small">XP</div>
+              <div class="stat-value" id="xpValue">680</div>
+            </div>
+            <div class="stat">
+              <div class="small">Moy.</div>
+              <div class="stat-value" id="accuracyValue">86%</div>
+            </div>
+            <div class="stat">
+              <div class="small">Leçons</div>
+              <div class="stat-value" id="lessonCount">12</div>
+            </div>
+            <div class="stat">
+              <div class="small">Combo</div>
+              <div class="stat-value" id="comboValue">3x</div>
+            </div>
+          </div>
+
+          <div class="lesson-list" id="lessonList">
+            <button class="lesson-item active" data-lesson="service" type="button">
+              <span class="lesson-meta"><strong>Service</strong><span class="small">Technique</span></span>
+              <span class="xp-tag">+120</span>
+            </button>
+            <button class="lesson-item" data-lesson="volley" type="button">
+              <span class="lesson-meta"><strong>Volley</strong><span class="small">Réactivité</span></span>
+              <span class="xp-tag">+160</span>
+            </button>
+            <button class="lesson-item" data-lesson="footwork" type="button">
+              <span class="lesson-meta"><strong>Footwork</strong><span class="small">Déplacement</span></span>
+              <span class="xp-tag">+180</span>
+            </button>
+            <button class="lesson-item" data-lesson="mental" type="button">
+              <span class="lesson-meta"><strong>Mental</strong><span class="small">Concentration</span></span>
+              <span class="xp-tag">+200</span>
+            </button>
+          </div>
+        </aside>
+
+        <main class="main-panel">
+          <section class="hero">
+            <div>
+              <p class="small">Session du jour</p>
+              <h1 id="heroTitle">Entraînement : service</h1>
+              <p id="heroText">Travaille la rotation du tronc, l’alignement du pied avant et la précision du point de contact pour gagner en puissance sans perdre la régularité.</p>
+            </div>
+            <div class="progress-box">
+              <div class="progress-top">
+                <span class="small">Progression</span>
+                <strong id="progressText">62%</strong>
+              </div>
+              <div class="bar"><span id="progressBar"></span></div>
+            </div>
+          </section>
+
+          <section class="module">
+            <div class="module-head">
+              <h2>Quiz rapide</h2>
+              <span class="small" id="difficultyLabel">Niveau intermédiaire</span>
+            </div>
+
+            <div class="module-card">
+              <div class="exercise">
+                <h3 id="questionTitle">Quel élément est le plus important pour un bon premier service ?</h3>
+                <div class="answers" id="answers"></div>
+                <div class="feedback" id="feedback"></div>
+              </div>
+              <div class="exercise">
+                <h3>Objectif de la leçon</h3>
+                <p id="lessonObjective" class="small">Réaliser 8 services réussis sur 10 avec un angle de frappe stable et un équilibre ferme.</p>
+                <div style="margin-top:16px; padding:12px; border-radius:12px; background:rgba(121,169,255,0.08); border:1px solid rgba(121,169,255,0.14);">
+                  <div class="small">Séance recommandée</div>
+                  <strong id="lessonWorkout">5 min · 10 répétitions</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="cta-row">
+              <button class="button secondary" type="button" id="skipBtn">Suivant</button>
+              <button class="button" type="button" id="completeBtn">Valider la leçon</button>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      const lessons = {
+        service: {
+          name: 'Service',
+          difficulty: 'Niveau intermédiaire',
+          objective: 'Réaliser 8 services réussis sur 10 avec un angle de frappe stable et un équilibre ferme.',
+          workout: '5 min · 10 répétitions',
+          progress: 62,
+          heroText: 'Travaille la rotation du tronc, l’alignement du pied avant et la précision du point de contact pour gagner en puissance sans perdre la régularité.',
+          question: 'Quel élément est le plus important pour un bon premier service ?',
+          answers: [
+            { text: 'Le placement du pied avant et l’équilibre', correct: true },
+            { text: 'Le nombre de balles utilisées', correct: false },
+            { text: 'Le score du set', correct: false },
+            { text: 'La couleur du court', correct: false }
+          ]
+        },
+        volley: {
+          name: 'Volley',
+          difficulty: 'Niveau avancé',
+          objective: 'Rester compact et réagir vite pour terminer les points sans perdre la stabilité.',
+          workout: '7 min · 12 échanges',
+          progress: 48,
+          heroText: 'Gagnez du temps grâce à un déplacement plus court, une prise de raquette plus tôt et un équilibre solide au point d’impact.',
+          question: 'Que faut-il faire avant de frapper une volée ?',
+          answers: [
+            { text: 'Se placer près du filet et garder le poids sur les pieds', correct: true },
+            { text: 'Courir au maximum pour viser le fond du court', correct: false },
+            { text: 'Laisser le bras cassé sans préparation', correct: false },
+            { text: 'Attendre jusqu’au dernier moment sans regarder la balle', correct: false }
+          ]
+        },
+        footwork: {
+          name: 'Footwork',
+          difficulty: 'Niveau débutant',
+          objective: 'Créer un premier pas rapide et précis pour préparer chaque coup sans perdre l’équilibre.',
+          workout: '6 min · 8 séquences',
+          progress: 74,
+          heroText: 'Les pieds sont le moteur du tennis : un bon déplacement te permet d’être toujours dans la bonne position pour frapper proprement.',
+          question: 'Pourquoi le pas d’approche est-il important ?',
+          answers: [
+            { text: 'Il aide à transférer le poids et à préparer une frappe équilibrée', correct: true },
+            { text: 'Il permet de jouer plus fort sans bouger les bras', correct: false },
+            { text: 'Il remplace totalement la prise de raquette', correct: false },
+            { text: 'Il évite d’avoir à regarder la balle', correct: false }
+          ]
+        },
+        mental: {
+          name: 'Mental',
+          difficulty: 'Niveau avancé',
+          objective: 'Rester concentré, contrôler le rythme et gérer les points décisifs sans perdre la confiance.',
+          workout: '8 min · 4 mini-séquences',
+          progress: 51,
+          heroText: 'Le tennis est aussi un jeu de concentration. Une routine simple et une respiration contrôlée améliorent la qualité des coups sous pression.',
+          question: 'Quel est le meilleur réflexe face à un point décisif ?',
+          answers: [
+            { text: 'Respirer, se recentrer et revenir à la routine de préparation', correct: true },
+            { text: 'Jouer plus vite sans réfléchir', correct: false },
+            { text: 'Hésiter pour gagner du temps', correct: false },
+            { text: 'Ne plus regarder la balle pour éviter la pression', correct: false }
+          ]
+        }
+      };
+
+      const lessonList = document.getElementById('lessonList');
+      const answersEl = document.getElementById('answers');
+      const feedbackEl = document.getElementById('feedback');
+      const heroTitle = document.getElementById('heroTitle');
+      const heroText = document.getElementById('heroText');
+      const progressText = document.getElementById('progressText');
+      const progressBar = document.getElementById('progressBar');
+      const questionTitle = document.getElementById('questionTitle');
+      const difficultyLabel = document.getElementById('difficultyLabel');
+      const lessonObjective = document.getElementById('lessonObjective');
+      const lessonWorkout = document.getElementById('lessonWorkout');
+      const userName = document.getElementById('userName');
+      const avatarInitial = document.getElementById('avatarInitial');
+      const xpValue = document.getElementById('xpValue');
+      const accuracyValue = document.getElementById('accuracyValue');
+      const lessonCount = document.getElementById('lessonCount');
+      const comboValue = document.getElementById('comboValue');
+
+      const user = localStorage.getItem('tr_pseudo') || 'Joueur';
+      userName.textContent = user;
+      avatarInitial.textContent = user.charAt(0).toUpperCase();
+
+      let currentLesson = 'service';
+      let answered = false;
+
+      function renderLesson(key) {
+        const lesson = lessons[key];
+        currentLesson = key;
+        answered = false;
+        feedbackEl.textContent = '';
+        feedbackEl.className = 'feedback';
+        heroTitle.textContent = 'Entraînement : ' + lesson.name.toLowerCase();
+        heroText.textContent = lesson.heroText;
+        progressText.textContent = lesson.progress + '%';
+        progressBar.style.width = lesson.progress + '%';
+        questionTitle.textContent = lesson.question;
+        difficultyLabel.textContent = lesson.difficulty;
+        lessonObjective.textContent = lesson.objective;
+        lessonWorkout.textContent = lesson.workout;
+
+        answersEl.innerHTML = '';
+        lesson.answers.forEach((item) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'answer';
+          btn.textContent = item.text;
+          btn.addEventListener('click', () => {
+            if (answered) return;
+            answered = true;
+            const isCorrect = item.correct;
+            document.querySelectorAll('.answer').forEach((el) => {
+              el.disabled = true;
+              el.classList.remove('correct', 'wrong');
+              const value = el.textContent;
+              const itemMatch = lesson.answers.find((a) => a.text === value);
+              if (itemMatch && itemMatch.correct) el.classList.add('correct');
+              if (el === btn && !isCorrect) el.classList.add('wrong');
+            });
+            if (isCorrect) {
+              feedbackEl.textContent = 'Bonne réponse ! +40 XP';
+              feedbackEl.className = 'feedback good';
+              const nextXp = Number(xpValue.textContent) + 40;
+              xpValue.textContent = nextXp;
+            } else {
+              feedbackEl.textContent = 'Presque ! La bonne réponse a été soulignée.';
+              feedbackEl.className = 'feedback bad';
+            }
+          });
+          answersEl.appendChild(btn);
+        });
+      }
+
+      document.querySelectorAll('.lesson-item').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.lesson-item').forEach((el) => el.classList.remove('active'));
+          btn.classList.add('active');
+          renderLesson(btn.dataset.lesson);
+        });
+      });
+
+      document.getElementById('skipBtn').addEventListener('click', () => {
+        const keys = Object.keys(lessons);
+        const currentIndex = keys.indexOf(currentLesson);
+        const nextKey = keys[(currentIndex + 1) % keys.length];
+        document.querySelector(`[data-lesson="${nextKey}"]`).click();
+      });
+
+      document.getElementById('completeBtn').addEventListener('click', () => {
+        const current = lessons[currentLesson];
+        const score = Number(progressText.textContent.replace('%','')) + 8;
+        progressText.textContent = Math.min(score, 100) + '%';
+        progressBar.style.width = Math.min(score, 100) + '%';
+        feedbackEl.textContent = 'Leçon validée ! Prochaine étape débloquée.';
+        feedbackEl.className = 'feedback good';
+        const xp = Number(xpValue.textContent) + 20;
+        xpValue.textContent = xp;
+        const currentLessonCount = Number(lessonCount.textContent) + 1;
+        lessonCount.textContent = currentLessonCount;
+        comboValue.textContent = (Number(comboValue.textContent.replace('x','')) + 1) + 'x';
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('tr_email');
+        localStorage.removeItem('tr_pseudo');
+        window.location.href = 'Connect.html';
+      });
+
+      renderLesson('service');
+    </script>
+  </body>
+</html>
