@@ -5,41 +5,60 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Tennis Rank — Inscription (2/2)</title>
     <style>
-      :root{color-scheme:dark;--bg:#0b1020;--card-from:rgba(255,255,255,0.03);--card-to:rgba(0,0,0,0.08);--accent-1:#79a9ff;--accent-2:#5d8dff;--muted:#aab6d5;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-      *{box-sizing:border-box} html,body{height:100%} body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%, #243d72, var(--bg) 60%);color:#f4f7ff;display:grid;place-items:center;padding:24px;overflow:hidden}
-      #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
-      main{width:min(100%,520px);z-index:1}
-      .card{padding:22px 20px;border-radius:18px;background:linear-gradient(180deg,var(--card-from),var(--card-to));border:1px solid rgba(170,190,230,0.18);box-shadow:0 18px 44px rgba(0,0,0,.38);position:relative;overflow:hidden}
-      @keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-      .card::before{content:"";position:absolute;inset:-20% auto auto -15%;width:160px;height:160px;background:radial-gradient(circle, rgba(121,169,255,0.18), rgba(121,169,255,0));filter:blur(18px)}
-      .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
-      .brand{display:flex;align-items:center;gap:10px;color:#eaf1ff;font-weight:800}
-      .mini-logo{width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));box-shadow:0 12px 28px rgba(93,141,255,.26)}
-      .mini-logo img{width:28px;height:28px;object-fit:cover;border-radius:9px}
-      .step-indicator{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);font-weight:700}
-      .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.12);display:inline-block;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.04)}
-      .dot.active{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));box-shadow:0 0 18px rgba(121,169,255,.4)}
-      .progress{height:6px;border-radius:999px;background:rgba(255,255,255,0.04);overflow:hidden;margin:8px 0 18px}
-      .progress > span{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));border-radius:inherit;box-shadow:0 8px 18px rgba(93,141,255,.22)}
-      h1{margin:0 0 8px;font-size:clamp(1.6rem,5vw,2.2rem)}
-      p.lead{margin:0 0 16px;color:var(--muted);line-height:1.6}
-      .field{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-      label{font-weight:700;color:#dbe8ff;font-size:.95rem}
-      input{padding:12px 14px;border-radius:12px;border:1px solid rgba(170,190,230,0.12);background:linear-gradient(180deg, rgba(12,18,32,0.52), rgba(12,18,32,0.42));color:inherit;font-size:1rem;outline:none;transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease}
-      input::placeholder{color:#9fb0da}
-      input:focus{box-shadow:0 6px 30px rgba(89,124,255,0.12), inset 0 0 0 1px rgba(121,169,255,0.06);transform:translateY(-1px)}
-      .primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));padding:12px 18px;border-radius:999px;border:none;color:#081126;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(93,141,255,.24);position:relative;overflow:hidden}
-      .secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:12px;cursor:pointer;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-      .actions{display:flex;gap:8px;align-items:center;margin-top:8px}
-      .actions > *{flex:1}
-      .checkbox-row{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.95rem;margin:12px 0 6px}
-      .rules{font-size:.9rem;color:var(--muted);margin-top:8px;line-height:1.6}
-      .msg{min-height:1.6em;margin-bottom:6px}
-      .error{color:#ffd1d1;background:rgba(255,210,210,0.04);border-radius:10px;padding:8px;border:1px solid rgba(255,180,180,0.06)}
-      .success{color:#bff7d1;background:rgba(180,255,210,0.04);border-radius:10px;padding:8px;border:1px solid rgba(180,255,210,0.1)}
-      .ripple{position:absolute;border-radius:50%;transform:scale(0);opacity:.6;background:rgba(255,255,255,0.18);pointer-events:none}
-      @media(max-width:480px){body{padding:18px}.card{padding:18px 16px}}
-      @media (prefers-reduced-motion: reduce){.card{animation:none}.progress > span{transition:none}} 
+      :root {
+        color-scheme: dark;
+        --bg: #0b1020;
+        --card-from: rgba(255,255,255,0.03);
+        --card-to: rgba(0,0,0,0.08);
+        --accent-1: #79a9ff;
+        --accent-2: #5d8dff;
+        --muted: #aab6d5;
+        --text: #f4f7ff;
+        --success: #7fe3a6;
+        --danger: #ff7b7b;
+        --border: rgba(170,190,230,0.12);
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px;
+        background: radial-gradient(circle at 20% 0%, #243d72, var(--bg) 60%);
+        color: var(--text); font-family: system-ui,-apple-system,"Segoe UI",sans-serif;
+      }
+      #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+      main { width: min(100%, 620px); z-index: 1; }
+      .card { position: relative; overflow: hidden; padding: 22px 20px 18px; border-radius: 18px; background: linear-gradient(180deg, var(--card-from), var(--card-to)); border: 1px solid var(--border); box-shadow: 0 18px 44px rgba(0,0,0,.38); }
+      .card::before { content: ""; position: absolute; inset: -20% auto auto -15%; width: 160px; height: 160px; background: radial-gradient(circle, rgba(121,169,255,0.18), rgba(121,169,255,0)); filter: blur(18px); }
+      .topbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+      .mini-logo { width: 38px; height: 38px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); box-shadow: 0 10px 22px rgba(121,169,255,.28); }
+      .mini-logo img { width: 28px; height: 28px; object-fit: cover; border-radius: 9px; }
+      .step-indicator { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--muted); font-weight: 700; }
+      .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.12); display: inline-block; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04); }
+      .dot.active { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); box-shadow: 0 0 18px rgba(121,169,255,.4); }
+      .progress { height: 6px; border-radius: 999px; background: rgba(255,255,255,.04); overflow: hidden; margin: 8px 0 18px; }
+      .progress > span { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); border-radius: inherit; box-shadow: 0 8px 18px rgba(93,141,255,.22); }
+      h1 { margin: 0 0 8px; font-size: clamp(1.6rem, 5vw, 2.2rem); }
+      .lead { margin: 0 0 16px; color: var(--muted); line-height: 1.6; }
+      .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+      label { font-weight: 700; color: #dbe8ff; font-size: 0.95rem; }
+      input, select { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(170,190,230,0.12); background: linear-gradient(180deg, rgba(12,18,32,0.52), rgba(12,18,32,0.42)); color: inherit; font-size: 1rem; outline: none; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+      input::placeholder { color: #9fb0da; }
+      input:focus, select:focus { box-shadow: 0 6px 30px rgba(89,124,255,.12), inset 0 0 0 1px rgba(121,169,255,.06); transform: translateY(-1px); }
+      .settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 10px; }
+      .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+      .chip { padding: 8px 10px; border-radius: 999px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); font-size: .85rem; color: var(--muted); }
+      .primary { background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); padding: 12px 18px; border-radius: 999px; border: none; color: #081126; font-weight: 800; cursor: pointer; box-shadow: 0 10px 24px rgba(93,141,255,.25); }
+      .secondary { background: transparent; border: 1px solid rgba(255,255,255,.06); padding: 10px 14px; border-radius: 12px; cursor: pointer; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; min-height: 46px; }
+      .actions { display: flex; gap: 8px; align-items: center; margin-top: 16px; }
+      .actions > * { flex: 1; }
+      .checkbox-row { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .95rem; margin: 12px 0 6px; }
+      .rules { font-size: .9rem; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+      .msg { min-height: 1.6em; margin-bottom: 6px; }
+      .error { color: #ffd1d1; background: rgba(255,210,210,.04); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,180,180,.06); }
+      .success { color: #bff7d1; background: rgba(180,255,210,.04); border-radius: 10px; padding: 8px; border: 1px solid rgba(180,255,210,.1); }
+      .ripple { position: absolute; border-radius: 50%; transform: scale(0); opacity: .6; background: rgba(255,255,255,.18); pointer-events: none; }
+      @media (max-width: 560px) { body { padding: 18px; } .card { padding: 18px 16px; } .settings-grid { grid-template-columns: 1fr; } }
     </style>
   </head>
   <body>
@@ -53,30 +72,40 @@
           </div>
           <div class="step-indicator"><span class="dot active"></span><span class="dot active"></span> <span>Étape 2 / 2</span></div>
         </div>
-
         <div class="progress"><span></span></div>
-
-        <h1 id="insc2">Sécurité</h1>
-        <p class="lead">Crée un mot de passe robuste et finalise la création du compte.</p>
-
+        <h1 id="insc2">Sécurité & paramètres</h1>
+        <p class="lead">Crée un mot de passe robuste et configure ton profil de jeu pour des leçons adaptées.</p>
         <div id="msg" class="msg" aria-live="polite"></div>
 
         <form id="step2" novalidate>
-          <div class="field">
-            <label for="password">Mot de passe</label>
-            <input id="password" name="password" type="password" placeholder="Au moins 8 caractères" required />
+          <div class="field"><label for="password">Mot de passe</label><input id="password" name="password" type="password" placeholder="Au moins 8 caractères" required /></div>
+          <div class="field"><label for="confirm">Confirmer le mot de passe</label><input id="confirm" name="confirm" type="password" placeholder="Retaper le mot de passe" required /></div>
+
+          <div class="settings-grid">
+            <div class="field"><label for="maxLeader">Max Leader</label><input id="maxLeader" type="number" min="1" max="10" value="5" /></div>
+            <div class="field"><label for="maxPlayers">Max Players</label><input id="maxPlayers" type="number" min="2" max="32" value="16" /></div>
           </div>
 
           <div class="field">
-            <label for="confirm">Confirmer le mot de passe</label>
-            <input id="confirm" name="confirm" type="password" placeholder="Retaper le mot de passe" required />
+            <label for="focus">Focus de training</label>
+            <select id="focus">
+              <option value="Service">Service</option>
+              <option value="Forehand">Forehand</option>
+              <option value="Backhand">Backhand</option>
+              <option value="Retour">Retour</option>
+              <option value="Volley">Volley</option>
+              <option value="Tactique">Tactique</option>
+            </select>
           </div>
 
-          <label class="checkbox-row">
-            <input id="terms" type="checkbox" /> J'accepte les conditions
-          </label>
+          <div class="chip-row">
+            <span class="chip">Niveau: <strong id="summaryLevel">Débutant</strong></span>
+            <span class="chip">Objectif: <strong id="summaryGoal">Loisir</strong></span>
+            <span class="chip">Fréquence: <strong id="summaryFrequency">1 fois / semaine</strong></span>
+          </div>
 
-          <div class="rules">Règles : au moins 8 caractères avec lettres + chiffres pour renforcer la sécurité.</div>
+          <label class="checkbox-row"><input id="terms" type="checkbox" /> J'accepte les conditions d'utilisation</label>
+          <div class="rules">Règles : au moins 8 caractères avec lettres + chiffres pour sécuriser le compte.</div>
 
           <div class="actions">
             <button type="submit" class="primary">Créer le compte</button>
@@ -94,48 +123,68 @@
         let h = canvas.height = innerHeight;
         const particles = [];
         const count = Math.round((w*h)/60000);
-        function rand(min,max){return Math.random()*(max-min)+min}
-        for(let i=0;i<count;i++) particles.push({x:rand(0,w),y:rand(0,h),r:rand(0.6,2.6),vx:rand(-0.05,0.05),vy:rand(-0.03,0.18),alpha:rand(0.06,0.22)});
-        function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight}
+
+        function rand(min,max){ return Math.random()*(max-min)+min; }
+        for (let i = 0; i < count; i++) {
+          particles.push({ x: rand(0, w), y: rand(0, h), r: rand(0.6, 2.6), vx: rand(-0.05, 0.05), vy: rand(-0.03, 0.18), alpha: rand(0.06, 0.22) });
+        }
+        function resize(){ w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
         addEventListener('resize', resize);
         function frame(){
           ctx.clearRect(0,0,w,h);
-          for(const p of particles){
+          for (const p of particles) {
             p.x += p.vx; p.y += p.vy;
-            if(p.y > h + 20) { p.y = -10; p.x = Math.random()*w }
-            if(p.x < -20) p.x = w+20; if(p.x > w+20) p.x = -20;
+            if (p.y > h + 20) { p.y = -10; p.x = Math.random()*w; }
+            if (p.x < -20) p.x = w + 20;
+            if (p.x > w + 20) p.x = -20;
             ctx.beginPath(); ctx.fillStyle = `rgba(185,205,255,${p.alpha})`; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
           }
           requestAnimationFrame(frame);
         }
-        if(!matchMedia('(prefers-reduced-motion: reduce)').matches) frame();
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) frame();
       })();
 
       function createRipple(e, el){
         const rect = el.getBoundingClientRect();
-        const d = Math.max(rect.width, rect.height)*1.6;
+        const d = Math.max(rect.width, rect.height) * 1.6;
         const ripple = document.createElement('span');
         ripple.className = 'ripple';
         ripple.style.width = ripple.style.height = d + 'px';
         ripple.style.left = (e.clientX - rect.left - d/2) + 'px';
         ripple.style.top = (e.clientY - rect.top - d/2) + 'px';
         el.appendChild(ripple);
-        ripple.animate([{transform:'scale(0)',opacity:0.45},{transform:'scale(1)',opacity:0}],{duration:520,easing:'cubic-bezier(.2,.9,.2,1)'}).onfinish=()=>ripple.remove();
+        ripple.animate([
+          { transform: 'scale(0)', opacity: 0.45 },
+          { transform: 'scale(1)', opacity: 0 }
+        ], { duration: 520, easing: 'cubic-bezier(.2,.9,.2,1)' }).onfinish = () => ripple.remove();
       }
+
       document.addEventListener('pointerdown', (ev) => {
         const el = ev.target.closest('.primary, .secondary');
-        if(el) createRipple(ev, el);
+        if (el) createRipple(ev, el);
       });
 
       const $ = (id) => document.getElementById(id);
       const msg = $('msg');
+
+      function preloadSummary(){
+        const level = localStorage.getItem('tr_signup_level') || 'Débutant';
+        const goal = localStorage.getItem('tr_signup_goal') || 'Loisir';
+        const frequency = localStorage.getItem('tr_signup_frequency') || '1 fois / semaine';
+        $('summaryLevel').textContent = level;
+        $('summaryGoal').textContent = goal;
+        $('summaryFrequency').textContent = frequency;
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         const email = localStorage.getItem('tr_signup_email');
         const pseudo = localStorage.getItem('tr_signup_pseudo');
         if (!email || !pseudo) {
           msg.innerHTML = '<div class="error">Données manquantes. Vous allez être redirigé.</div>';
           setTimeout(() => window.location.href = 'signupt1.html', 1200);
+          return;
         }
+        preloadSummary();
       });
 
       $('step2').addEventListener('submit', (e) => {
@@ -143,6 +192,9 @@
         const pw = $('password').value;
         const conf = $('confirm').value;
         const terms = $('terms').checked;
+        const maxLeader = Number($('maxLeader').value || 5);
+        const maxPlayers = Number($('maxPlayers').value || 16);
+        const focus = $('focus').value;
         msg.textContent = '';
 
         if (pw.length < 8) {
@@ -157,23 +209,41 @@
           msg.innerHTML = '<div class="error">Vous devez accepter les conditions.</div>';
           return;
         }
+        if (maxLeader < 1 || maxLeader > 10 || maxPlayers < 2 || maxPlayers > 32) {
+          msg.innerHTML = '<div class="error">Les valeurs Max Leader / Max Players sont hors limites.</div>';
+          return;
+        }
 
         const fullname = localStorage.getItem('tr_signup_fullname') || '';
         const pseudo = localStorage.getItem('tr_signup_pseudo') || '';
         const email = localStorage.getItem('tr_signup_email') || '';
+        const level = localStorage.getItem('tr_signup_level') || 'Débutant';
+        const goal = localStorage.getItem('tr_signup_goal') || 'Loisir';
+        const frequency = localStorage.getItem('tr_signup_frequency') || '1 fois / semaine';
 
-        const user = { fullname, pseudo, email, passwordHash: btoa(pw), createdAt: new Date().toISOString() };
+        const user = {
+          fullname, pseudo, email, level, goal, frequency,
+          maxLeader, maxPlayers, focus,
+          passwordHash: btoa(pw), createdAt: new Date().toISOString()
+        };
+
         localStorage.setItem('tr_user_' + email, JSON.stringify(user));
+        localStorage.setItem('tr_profile', JSON.stringify(user));
+        localStorage.setItem('tr_pseudo', pseudo);
+        localStorage.setItem('tr_email', email);
+        localStorage.setItem('tr_max_leader', String(maxLeader));
+        localStorage.setItem('tr_max_players', String(maxPlayers));
+        localStorage.setItem('tr_focus', focus);
+
         localStorage.removeItem('tr_signup_fullname');
         localStorage.removeItem('tr_signup_pseudo');
         localStorage.removeItem('tr_signup_email');
+        localStorage.removeItem('tr_signup_level');
+        localStorage.removeItem('tr_signup_goal');
+        localStorage.removeItem('tr_signup_frequency');
 
         msg.innerHTML = '<div class="success">Compte créé avec succès. Redirection…</div>';
-        setTimeout(() => {
-          localStorage.setItem('tr_pseudo', pseudo);
-          localStorage.setItem('tr_email', email);
-          window.location.href = 'train.html';
-        }, 900);
+        setTimeout(() => { window.location.href = 'train.html'; }, 900);
       });
     </script>
   </body>
