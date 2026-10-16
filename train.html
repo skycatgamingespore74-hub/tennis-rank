@@ -9,7 +9,7 @@
       *{box-sizing:border-box}
       html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(circle at 50% 0%,#243d72 0%,var(--bg)60%);color:#edf4ff}
       .app{max-width:1180px;margin:0 auto;padding:18px 18px 120px}
-      .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04)}
+      .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
       .brand{display:flex;gap:12px;align-items:center;font-weight:800}
       .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center}
       .grid{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:18px}
@@ -23,12 +23,12 @@
       .stat{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);font-weight:800}
 
       /* lesson list (aside) */
-      .lesson-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:12px;margin-top:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;cursor:pointer;transition:transform .28s,box-shadow .28s}
+      .lesson-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:12px;margin-top:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;cursor:pointer}
       .lesson-item:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(5,12,30,0.6)}
       .lesson-item.active{background:linear-gradient(90deg,rgba(121,169,255,0.12),rgba(93,141,255,0.06));border-color:rgba(121,169,255,0.18)}
 
       /* main training card - mimic Mimo */
-      .card-hero{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;padding:18px;border-radius:16px;background:linear-gradient(180deg,rgba(121,169,255,0.06),rgba(255,255,255,0.02));border:1px solid rgba(121,169,255,0.12);overflow:hidden}
+      .card-hero{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;padding:18px;border-radius:16px;background:linear-gradient(180deg,rgba(121,169,255,0.06),rgba(255,255,255,0.02))}
       .ring{width:110px;height:110px}
       .hero-text h1{margin:0;font-size:1.6rem}
       .hero-text p{margin:6px 0 0;color:var(--muted)}
@@ -52,7 +52,7 @@
       .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
 
       /* finish modal */
-      .modal{position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.6));z-index:9999;visibility:hidden;opacity:0;transition:opacity .25s,visibility .25s}
+      .modal{position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.6));z-index:9999;visibility:hidden;opacity:0;transition:opacity .2s}
       .modal.show{visibility:visible;opacity:1}
       .modal-card{width:min(520px,94%);background:linear-gradient(180deg,rgba(10,18,30,0.96),rgba(8,12,20,0.98));border-radius:18px;padding:18px;border:1px solid rgba(255,255,255,0.04);text-align:center}
       .modal-card h3{margin:6px 0 0}
@@ -65,7 +65,7 @@
       @keyframes exitToLeft{from{opacity:1}to{transform:translateX(-12px) scale(.995);opacity:0}}
 
       /* bottom nav */
-      .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;width:min(100% - 24px,760px);display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:10px;background:rgba(10,17,27,0.94);border:1px solid rgba(255,255,255,0.04);border-radius:20px;z-index:50}
+      .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;width:min(100% - 24px,760px);display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:10px;background:rgba(255,255,255,0.02);border-radius:12px}
       .nav-btn{background:transparent;border:none;color:var(--muted);padding:8px 6px;border-radius:12px;cursor:pointer;font-weight:800}
       .nav-btn.active{background:linear-gradient(180deg,rgba(121,169,255,0.08),rgba(93,141,255,0.04));color:#edf4ff}
 
@@ -173,7 +173,7 @@
     </div>
 
     <script>
-      // Expanded tennis-only lessons with many micro-units (rempli au max)
+      // lessons (tennis-only)
       const lessons = {
         service: { title:'Service', hero:"Puissance & précision", units:[
           {title:'Position', question:'Quel pied doit être en avant pour un service stable ?', answers:['Pied avant naturel','Pied arrière','Les deux pieds de même côté','Aucun pied'], correct:0, tip:'Pied avant pour l’équilibre.'},
@@ -184,15 +184,15 @@
         ]},
         forehand: { title:'Forehand', hero:'Topspin & placement', units:[
           {title:'Grip', question:'Prise la plus courante pour topspin ?', answers:['Semi-western','Eastern','Continental','Western'], correct:0, tip:'Semi-western pour topspin moderne.'},
-          {title:'Bascule', question:'La préparation commence par ?', answers:['Rotation du buste','Tirer le bras vers l’arrière','Sauter','Lancer la balle'], correct:0, tip:'Rotation et préparation du pied.'},
-          {title:'Contact', question:'Où frapper la balle ?', answers:['Un peu en avant','Très en arrière','Près du corps','N’importe où'], correct:0, tip:'Un point de contact stable devant le corps.'}
+          {title:'Bascule', question:'La préparation commence par ?', answers:['Rotation du buste','Tirer le bras vers l’arrière','Sauter','Lancer la balle'], correct:0, tip:'Rotation et préparation du corps.'},
+          {title:'Contact', question:'Où frapper la balle ?', answers:['Un peu en avant','Très en arrière','Près du corps','N’importe où'], correct:0, tip:'Un point de contact stable devant.'}
         ]},
         backhand: { title:'Backhand', hero:'Contrôle & régularité', units:[
-          {title:'Deux mains', question:'Avantage de deux mains ?', answers:['Plus de contrôle','Moins de contrôle','Plus lent','Moins stable'], correct:0, tip:'Contrôle et puissance pour revers à deux mains.'},
-          {title:'Un main', question:'Avantage du revers à une main ?', answers:['Plus d’extension','Plus de topspin simple','Moins de portée','Nulle'], correct:0, tip:'Plus d’extension et variété.'}
+          {title:'Deux mains', question:'Avantage de deux mains ?', answers:['Plus de contrôle','Moins de contrôle','Plus lent','Moins stable'], correct:0, tip:'Contrôle et puissance pour revenir.'},
+          {title:'Un main', question:'Avantage du revers à une main ?', answers:['Plus d’extension','Plus de topspin simple','Moins de portée','Nulle'], correct:0, tip:'Plus d’extension et toucher.'}
         ]},
         volley: { title:'Volley', hero:'Jeu au filet', units:[
-          {title:'Position', question:'Où se placer pour une volée ?', answers:['Près du filet','Au fond du court','Sur la ligne latérale','Dans les tribunes'], correct:0, tip:'Proche du filet pour réduire le temps de réaction.'},
+          {title:'Position', question:'Où se placer pour une volée ?', answers:['Près du filet','Au fond du court','Sur la ligne latérale','Dans les tribunes'], correct:0, tip:'Proche du filet, prêt à couper.'},
           {title:'Prise', question:'Type de prise courante ?', answers:['Continental','Eastern','Western','Semi-western'], correct:0, tip:'Continental facilite les volées.'}
         ]},
         footwork: { title:'Footwork', hero:'Déplacement & équilibre', units:[
@@ -204,7 +204,7 @@
           {title:'Placement', question:'Où viser sur un bon retour ?', answers:['Milieu-court','Court-ligne','Trop long','En l’air'], correct:0, tip:'Viser le court pour casser le rythme.'}
         ]},
         tactics: { title:'Tactique', hero:'Planification de match', units:[
-          {title:'Stratégie', question:'Que faire contre un joueur agressif ?', answers:['Varier l’effet','Lui laisser le rythme','Ne pas bouger','Crier'], correct:0, tip:'Varier pour casser le timing adverse.'},
+          {title:'Stratégie', question:'Que faire contre un joueur agressif ?', answers:['Varier l’effet','Lui laisser le rythme','Ne pas bouger','Crier'], correct:0, tip:'Varier pour casser le rythme.'},
           {title:'Zone', question:'Exploiter la faiblesse ?', answers:['Viser la faiblesse','Toujours frapper fort','Servir trop haut','Ne pas servir'], correct:0, tip:'Attaquer les zones faibles.'}
         ]}
       };
@@ -228,67 +228,199 @@
       const finishModal = document.getElementById('finishModal');
       const modalXp = document.getElementById('modalXp');
       const modalBadges = document.getElementById('modalBadges');
-      const cardHero = document.getElementById('cardHero');
 
       // local storage helpers
       function getTodayKey(){return 'tr_daily_'+new Date().toISOString().slice(0,10)}
       function getDailyUsed(){return Number(localStorage.getItem(getTodayKey())||'0')}
       function incDailyUsed(){const k=getTodayKey();const n=getDailyUsed()+1;localStorage.setItem(k,String(n));return n}
 
-      function updateProgressRing(value){ringProgress.style.strokeDasharray='100';ringProgress.style.strokeDashoffset=String(100-value);ringValue.textContent=value+'%'}
+      function updateProgressRing(value){if(ringProgress){ringProgress.style.strokeDasharray='100';ringProgress.style.strokeDashoffset=String(100-value);} if(ringValue) ringValue.textContent=value+'%'}
 
       function setLessonActiveButtons(){document.querySelectorAll('.lesson-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.lesson===state.currentLesson))}
 
-      function renderMiniUnits(){miniUnitsWrap.innerHTML='';const units=lessons[state.currentLesson].units;const prog=Number(localStorage.getItem('prog_'+state.currentLesson)||'0');units.forEach((u,i)=>{const d=document.createElement('div');d.className='mini-unit'+(i<prog?' done':'');d.textContent=(i+1)+'. '+u.title;d.addEventListener('click',()=>{state.currentUnit=i; animateCard();renderQuestion();});miniUnitsWrap.appendChild(d)})}
+      function renderMiniUnits(){
+        miniUnitsWrap.innerHTML='';
+        const units = lessons[state.currentLesson].units;
+        const prog = Number(localStorage.getItem('prog_'+state.currentLesson)||'0');
+        units.forEach((u,i)=>{
+          const d = document.createElement('div');
+          d.className = 'mini-unit' + (i<prog ? ' done' : '');
+          d.textContent = (i+1)+'. '+u.title;
+          d.addEventListener('click', ()=>{ state.currentUnit = i; animateCard(); renderQuestion(); });
+          miniUnitsWrap.appendChild(d);
+        });
+      }
 
-      function renderQuestion(){const lesson=lessons[state.currentLesson];const unit=lesson.units[state.currentUnit];state.answered=false;questionTitle.textContent=unit.question;answersWrap.innerHTML='';feedback.textContent='';tipEl.style.display='none';unit.answers.forEach((a,idx)=>{const b=document.createElement('button');b.type='button';b.className='answer-btn';b.textContent=a;b.addEventListener('click',()=>handleAnswer(idx));answersWrap.appendChild(b)});const prog=Number(localStorage.getItem('prog_'+state.currentLesson)||'0');updateProgressRing(Math.round((prog/lesson.units.length)*100));}
+      function renderQuestion(){
+        const lesson = lessons[state.currentLesson];
+        const unit = lesson.units[state.currentUnit];
+        state.answered = false;
+        if(questionTitle) questionTitle.textContent = unit.question;
+        answersWrap.innerHTML = '';
+        feedback.textContent = '';
+        tipEl.style.display = 'none';
+        unit.answers.forEach((a, idx)=>{
+          const b = document.createElement('button');
+          b.type='button'; b.className='answer-btn'; b.textContent = a;
+          b.addEventListener('click', ()=> handleAnswer(idx));
+          answersWrap.appendChild(b);
+        });
+        const prog = Number(localStorage.getItem('prog_'+state.currentLesson)||'0');
+        updateProgressRing(Math.round((prog/lesson.units.length)*100));
+      }
 
-      function animateCard(){const el=document.getElementById('trainCard');el.classList.remove('animate-enter');void el.offsetWidth;el.classList.add('animate-enter')}
+      function animateCard(){const el=document.getElementById('trainCard');if(!el) return;el.classList.remove('animate-enter');void el.offsetWidth;el.classList.add('animate-enter')}
 
-      function handleAnswer(idx){if(state.answered)return;state.answered=true;const unit=lessons[state.currentLesson].units[state.currentUnit];const btns=document.querySelectorAll('.answer-btn');btns.forEach((b,i)=>{b.disabled=true;if(i===unit.correct)b.classList.add('correct');if(i===idx && i!==unit.correct)b.classList.add('wrong')});if(idx===unit.correct){feedback.textContent='Bonne réponse !';feedback.style.color='#7fe3a6';const xp=Number(xpValue.textContent)+40;xpValue.textContent=String(xp);const prog=Number(localStorage.getItem('prog_'+state.currentLesson)||'0');if(state.currentUnit>=prog)localStorage.setItem('prog_'+state.currentLesson,String(Math.min(prog+1,lessons[state.currentLesson].units.length)));tipEl.textContent=unit.tip;tipEl.style.display='block';spawnConfetti();awardBadge('Finisher '+lessons[state.currentLesson].title)}else{feedback.textContent='Presque — essaye la prochaine fois.';feedback.style.color='#ff8a80'}renderMiniUnits();}
+      function handleAnswer(idx){
+        if(state.answered) return;
+        state.answered = true;
+        const unit = lessons[state.currentLesson].units[state.currentUnit];
+        const btns = document.querySelectorAll('.answer-btn');
+        btns.forEach((b,i)=>{ b.disabled=true; if(i===unit.correct) b.classList.add('correct'); if(i===idx && i!==unit.correct) b.classList.add('wrong'); });
+        if(idx===unit.correct){
+          feedback.textContent = 'Bonne réponse !'; feedback.style.color = '#7fe3a6';
+          const xp = Number(xpValue.textContent) + 40; xpValue.textContent = String(xp);
+          const prog = Number(localStorage.getItem('prog_'+state.currentLesson)||'0');
+          if(state.currentUnit >= prog) localStorage.setItem('prog_'+state.currentLesson,String(Math.min(prog+1, lessons[state.currentLesson].units.length)));
+          tipEl.textContent = unit.tip; tipEl.style.display='block';
+          spawnConfetti();
+          awardBadge('Finisher '+lessons[state.currentLesson].title);
+        } else {
+          feedback.textContent = 'Presque — essaye la prochaine fois.'; feedback.style.color = '#ff8a80';
+        }
+        renderMiniUnits();
+      }
 
-      function spawnConfetti(){const canvas=document.createElement('canvas');canvas.width=innerWidth;canvas.height=innerHeight;canvas.style.position='fixed';canvas.style.left='0';canvas.style.top='0';canvas.style.zIndex=9999;canvas.style.pointerEvents='none';document.body.appendChild(canvas);const ctx=canvas.getContext('2d');const pieces=[];for(let i=0;i<60;i++)pieces.push({x:Math.random()*canvas.width,y:Math.random()*-canvas.height,vx:(Math.random()-0.5)*6,vy:Math.random()*4+3,size:Math.random()*8+4,color:['#79a9ff','#7fe3a6','#ffd76c','#ffb778'][Math.floor(Math.random()*4)]});let raf;function f(){ctx.clearRect(0,0,canvas.width,canvas.height);for(const p of pieces){p.x+=p.vx;p.y+=p.vy;ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,p.size,p.size*1.3)}if(pieces.some(p=>p.y<canvas.height+20))raf=requestAnimationFrame(f);else{cancelAnimationFrame(raf);canvas.remove()}}f()}
+      function spawnConfetti(){
+        const canvas = document.createElement('canvas');
+        canvas.width = innerWidth; canvas.height = innerHeight;
+        canvas.style.position='fixed'; canvas.style.left='0'; canvas.style.top='0'; canvas.style.zIndex=9999; canvas.style.pointerEvents='none';
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        const pieces = [];
+        for(let i=0;i<60;i++) pieces.push({x:Math.random()*canvas.width,y:Math.random()*-canvas.height,vx:(Math.random()-0.5)*6,vy:Math.random()*4+3,size:Math.random()*8+4,color:['#79a9ff','#7fe3a6','#ffd76c','#ffb778'][Math.floor(Math.random()*4)]});
+        let raf;
+        function f(){ ctx.clearRect(0,0,canvas.width,canvas.height); for(const p of pieces){ p.x+=p.vx; p.y+=p.vy; ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,p.size,p.size*1.3); } if(pieces.some(p=>p.y<canvas.height+20)) raf=requestAnimationFrame(f); else { cancelAnimationFrame(raf); canvas.remove(); } }
+        f();
+      }
 
-      function awardBadge(name){const badges=JSON.parse(localStorage.getItem('tr_badges')||'[]');if(!badges.includes(name)){badges.push(name);localStorage.setItem('tr_badges',JSON.stringify(badges));renderBadges();showModalBadge(name)}}
-      function renderBadges(){const badges=JSON.parse(localStorage.getItem('tr_badges')||'[]');badgeRow.innerHTML=badges.length?badges.map(b=>'<span class="mini-unit done">'+b+'</span>').join(' '):'<span class="mini-unit">Nouveau</span>'}
+      function awardBadge(name){
+        const badges = JSON.parse(localStorage.getItem('tr_badges')||'[]');
+        if(!badges.includes(name)){
+          badges.push(name);
+          localStorage.setItem('tr_badges', JSON.stringify(badges));
+          renderBadges();
+          showModalBadge(name);
+        }
+      }
 
-      function showModalBadge(name){modalBadges.innerHTML='<div style="padding:6px 10px;border-radius:8px;background:linear-gradient(90deg,#ffd76c,#ffb778);font-weight:900">'+name+'</div>';setTimeout(()=>modalBadges.innerHTML='',2200)}
+      function renderBadges(){
+        const badges = JSON.parse(localStorage.getItem('tr_badges')||'[]');
+        badgeRow.innerHTML = badges.length ? badges.map(b=>'<span class="mini-unit done">'+b+'</span>').join(' ') : '<span class="muted">Aucun badge</span>';
+      }
 
-      function openFinishModal(xp, badges){modalXp.textContent='+'+xp+' XP';modalBadges.innerHTML=badges.map(b=>'<div style="padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.04);font-weight:900">'+b+'</div>').join('');finishModal.classList.add('show');finishModal.setAttribute('aria-hidden','false')}
-      function closeFinishModal(){finishModal.classList.remove('show');finishModal.setAttribute('aria-hidden','true')}
+      function showModalBadge(name){
+        modalBadges.innerHTML = '<div style="padding:6px 10px;border-radius:8px;background:linear-gradient(90deg,#ffd76c,#ffb778);font-weight:900">'+name+'</div>';
+        setTimeout(()=>{ modalBadges.innerHTML=''; }, 2200);
+      }
+
+      function openFinishModal(xp, badges){
+        modalXp.textContent = '+'+xp+' XP';
+        modalBadges.innerHTML = (badges||[]).map(b=>'<div style="padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.04);font-weight:800;margin:4px 0">'+b+'</div>').join('');
+        finishModal.classList.add('show'); finishModal.setAttribute('aria-hidden','false');
+      }
+      function closeFinishModal(){ finishModal.classList.remove('show'); finishModal.setAttribute('aria-hidden','true'); }
 
       // handle lesson completion with modal and transitions
-      document.getElementById('completeBtn').addEventListener('click',()=>{
-        // quota check
-        const limit=3;const used=getDailyUsed();if(!localStorage.getItem('tr_subscribed') && used>=limit){alert('Quota gratuit atteint. Passez à Max.');return}
-        if(!localStorage.getItem('tr_subscribed'))incDailyUsed();const xpGained=100;xpValue.textContent=String(Number(xpValue.textContent)+xpGained);lessonCount.textContent=String(Number(lessonCount.textContent)+1);const badgeName='Complété '+lessons[state.currentLesson].title;awardBadge(badgeName);openFinishModal(xpGained,[badgeName]);updateProgressRing(100);});
+      document.getElementById('completeBtn').addEventListener('click', ()=>{
+        const limit = 3; const used = getDailyUsed();
+        if(!localStorage.getItem('tr_subscribed') && used>=limit){ alert('Quota gratuit atteint. Passez à Max.'); return; }
+        if(!localStorage.getItem('tr_subscribed')) incDailyUsed();
+        const xpGained = 100; xpValue.textContent = String(Number(xpValue.textContent)+xpGained);
+        lessonCount.textContent = String(Number(lessonCount.textContent)+1);
+        awardBadge('Finisher '+lessons[state.currentLesson].title);
+        const badges = JSON.parse(localStorage.getItem('tr_badges')||'[]');
+        openFinishModal(xpGained, badges);
+      });
 
-      document.getElementById('skipBtn').addEventListener('click',()=>{const keys=Object.keys(lessons);const idx=keys.indexOf(state.currentLesson);const next=keys[(idx+1)%keys.length];switchLesson(next)});
-      document.getElementById('practiceBtn').addEventListener('click',()=>{state.practice=!state.practice;document.getElementById('modeLabel').textContent=state.practice?'Pratique':'Standard'});
+      document.getElementById('skipBtn').addEventListener('click', ()=>{
+        const keys = Object.keys(lessons); const idx = keys.indexOf(state.currentLesson); const next = keys[(idx+1)%keys.length]; switchLesson(next);
+      });
 
-      document.getElementById('continueBtn').addEventListener('click',()=>{closeFinishModal();const keys=Object.keys(lessons);const idx=keys.indexOf(state.currentLesson);const next=keys[(idx+1)%keys.length];switchLesson(next)});
-      document.getElementById('toCategoryBtn').addEventListener('click',()=>{closeFinishModal();renderLessonListUI()});
+      document.getElementById('practiceBtn').addEventListener('click', ()=>{
+        state.practice = !state.practice; document.getElementById('modeLabel').textContent = state.practice ? 'Pratique' : 'Standard';
+      });
 
-      // nav switches (simple screens for now)
-      document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');const t=b.dataset.target; if(t!=='train')alert('Onglet "'+t+'" - prototype local (fonctionnalités basiques)')}));
+      document.getElementById('continueBtn').addEventListener('click', ()=>{ closeFinishModal(); const keys=Object.keys(lessons); const idx=keys.indexOf(state.currentLesson); const next=keys[(idx+1)%keys.length]; switchLesson(next); });
+      document.getElementById('toCategoryBtn').addEventListener('click', ()=>{ closeFinishModal(); renderLessonListUI(); });
+
+      // nav switches (open local pages or sections)
+      document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click', ()=>{
+        document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        const target = b.dataset.target;
+        // basic routing: open local pages for non-train screens
+        if(target === 'train') {
+          window.location.hash = '#train';
+        } else if(target === 'profile') {
+          window.location.href = 'signupt2.html';
+        } else if(target === 'max') {
+          window.location.href = 'subscription.html';
+        } else if(target === 'leaderboard') {
+          window.location.href = 'levels.html';
+        } else if(target === 'schools') {
+          window.location.href = 'about.html';
+        }
+      }));
 
       // lesson list click
-      document.querySelectorAll('.lesson-item').forEach(b=>b.addEventListener('click',()=>switchLesson(b.dataset.lesson)));
+      document.querySelectorAll('.lesson-item').forEach(b=>b.addEventListener('click', ()=>switchLesson(b.dataset.lesson)));
 
-      function switchLesson(key){if(!lessons[key])return; // animate exit
-        const el=document.getElementById('trainCard');el.classList.remove('animate-enter');el.classList.add('animate-exit');setTimeout(()=>{state.currentLesson=key;state.currentUnit=0;renderLessonListUI();renderMiniUnits();renderQuestion();heroTitle.textContent='Entraînement: '+lessons[key].title;heroText.textContent=lessons[key].hero;el.classList.remove('animate-exit');animateCard()},220)}
+      function switchLesson(key){
+        if(!lessons[key]) return;
+        const el=document.getElementById('trainCard'); if(el){ el.classList.remove('animate-enter'); el.classList.add('animate-exit'); }
+        setTimeout(()=>{
+          state.currentLesson = key; state.currentUnit = 0;
+          const lesson = lessons[key];
+          heroTitle.textContent = 'Entraînement: ' + lesson.title;
+          heroText.textContent = lesson.hero || '';
+          setLessonActiveButtons(); renderMiniUnits(); renderQuestion(); if(el){ el.classList.remove('animate-exit'); el.classList.add('animate-enter'); }
+        }, 280);
+      }
 
-      function renderLessonListUI(){setLessonActiveButtons();renderBadges();}
+      function renderLessonListUI(){ setLessonActiveButtons(); renderBadges(); }
 
-      // initial render
-      function init(){const storedPseudo=localStorage.getItem('tr_pseudo')||'Joueur';document.getElementById('userName').textContent=storedPseudo;document.getElementById('avatarInitial').textContent=storedPseudo.charAt(0).toUpperCase();renderLessonListUI();renderMiniUnits();renderQuestion();updateProgressRing( Math.round((Number(localStorage.getItem('prog_'+state.currentLesson)||'0')/lessons[state.currentLesson].units.length)*100) )}
+      // initial render & profile prefill (max values)
+      function init(){
+        // Pre-fill a 'max' profile if missing
+        if(!localStorage.getItem('tr_pseudo')) localStorage.setItem('tr_pseudo', 'Max');
+        if(!localStorage.getItem('tr_email')) localStorage.setItem('tr_email', 'max@tennis.rank');
+        if(!localStorage.getItem('tr_max_leader')) localStorage.setItem('tr_max_leader', '10');
+        if(!localStorage.getItem('tr_max_players')) localStorage.setItem('tr_max_players', '32');
+        if(!localStorage.getItem('tr_profile')){
+          const profile = { fullname: 'Maxime Champion', pseudo: 'Max', email: localStorage.getItem('tr_email'), level: 'Compétition', goal: 'Technique', frequency: '4+ fois / semaine', createdAt: new Date().toISOString() };
+          localStorage.setItem('tr_profile', JSON.stringify(profile));
+        }
+
+        const storedPseudo = localStorage.getItem('tr_pseudo') || 'Joueur';
+        document.getElementById('userName').textContent = storedPseudo;
+        document.getElementById('avatarInitial').textContent = (storedPseudo && storedPseudo[0]) ? storedPseudo[0].toUpperCase() : 'J';
+        // xp and lessons default values
+        if(!localStorage.getItem('tr_xp')) localStorage.setItem('tr_xp','680');
+        if(!localStorage.getItem('tr_lessons')) localStorage.setItem('tr_lessons','12');
+        xpValue.textContent = localStorage.getItem('tr_xp');
+        lessonCount.textContent = localStorage.getItem('tr_lessons');
+
+        renderLessonListUI();
+        renderMiniUnits();
+        renderQuestion();
+      }
 
       // finish modal close on backdrop
-      finishModal.addEventListener('click', (e)=>{if(e.target===finishModal)closeFinishModal()})
+      finishModal.addEventListener('click', (e)=>{ if(e.target === finishModal) closeFinishModal(); });
 
-      // local leaderboard / badges storage hooks
+      // init
       init();
-
     </script>
   </body>
 </html>
