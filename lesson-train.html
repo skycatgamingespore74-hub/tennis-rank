@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Train de leçons — Maquette</title>
+  <style>
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+    body{background:linear-gradient(180deg,#f6f9ff 0%, #ffffff 60%);color:#12263a;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+
+    /* Phone/card */
+    .phone{width:360px;max-width:92vw;background:#fff;border-radius:28px;padding:20px;box-shadow:0 12px 30px rgba(17,24,39,0.12);position:relative}
+    .header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .avatar{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#ffb86b,#ff758c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    .title{font-size:18px;font-weight:700}
+    .subtitle{font-size:12px;color:#6b7280}
+
+    /* Train area */
+    .train-wrap{padding:12px;background:linear-gradient(180deg,#f8fbff,#ffffff);border-radius:16px}
+    .track{position:relative;height:120px;display:flex;align-items:center;justify-content:center}
+
+    /* horizontal track line */
+    .track-line{position:absolute;left:18px;right:18px;height:6px;background:linear-gradient(90deg,#e2e8f0,#c7d2fe);border-radius:6px;z-index:1}
+
+    /* nodes */
+    .nodes{display:flex;gap:28px;z-index:2;position:relative}
+    .node{width:64px;height:64px;border-radius:50%;background:#fff;border:6px solid #e8eefc;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;box-shadow:0 6px 18px rgba(16,24,40,0.08);transition:transform .18s, box-shadow .18s}
+    .node:hover{transform:translateY(-6px);box-shadow:0 10px 22px rgba(16,24,40,0.12)}
+    .node .num{font-weight:800;color:#0f172a}
+    .node .lbl{font-size:10px;color:#475569}
+
+    /* active */
+    .node.active{border-color:#7c3aed;background:linear-gradient(180deg,#7c3aed 0%,#5b21b6 100%);color:white}
+
+    /* lessons list */
+    .lessons{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+    .lesson{background:#fbfdff;border-left:4px solid #e6eefb;padding:10px 12px;border-radius:8px;color:#0b1220;font-size:14px}
+    .lesson.hidden{display:none}
+
+    /* footer */
+    .footer{margin-top:18px;text-align:center;color:#6b7280;font-size:13px}
+
+    /* small screens adjust */
+    @media (max-width:380px){.nodes{gap:18px}.node{width:56px;height:56px}}
+  </style>
+</head>
+<body>
+  <div class="phone" role="application" aria-label="Train de leçons">
+    <div class="header">
+      <div class="avatar">TR</div>
+      <div>
+        <div class="title">Train de leçons</div>
+        <div class="subtitle">Suivez les leçons dans l'ordre</div>
+      </div>
+    </div>
+
+    <div class="train-wrap">
+      <div class="track" aria-hidden="true">
+        <div class="track-line"></div>
+        <div class="nodes" role="list">
+          <button class="node active" data-lesson="1" role="listitem" aria-pressed="true">
+            <div class="num">1</div>
+            <div class="lbl">Intro</div>
+          </button>
+          <button class="node" data-lesson="2" role="listitem" aria-pressed="false">
+            <div class="num">2</div>
+            <div class="lbl">Bases</div>
+          </button>
+          <button class="node" data-lesson="3" role="listitem" aria-pressed="false">
+            <div class="num">3</div>
+            <div class="lbl">Technique</div>
+          </button>
+          <button class="node" data-lesson="4" role="listitem" aria-pressed="false">
+            <div class="num">4</div>
+            <div class="lbl">Strat.</div>
+          </button>
+          <button class="node" data-lesson="5" role="listitem" aria-pressed="false">
+            <div class="num">5</div>
+            <div class="lbl">Match</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="lessons">
+        <div class="lesson" data-content="1">
+          <strong>Leçon 1 — Introduction</strong>
+          <p style="margin-top:6px;color:#475569;font-size:13px">Bienvenue : objectifs de la formation et aperçu rapide.</p>
+        </div>
+        <div class="lesson hidden" data-content="2">
+          <strong>Leçon 2 — Bases</strong>
+          <p style="margin-top:6px;color:#475569;font-size:13px">Positions, règles et prise en main.</p>
+        </div>
+        <div class="lesson hidden" data-content="3">
+          <strong>Leçon 3 — Technique</strong>
+          <p style="margin-top:6px;color:#475569;font-size:13px">Les gestes clés et entraînements.</p>
+        </div>
+        <div class="lesson hidden" data-content="4">
+          <strong>Leçon 4 — Stratégie</strong>
+          <p style="margin-top:6px;color:#475569;font-size:13px">Comment construire un point.</p>
+        </div>
+        <div class="lesson hidden" data-content="5">
+          <strong>Leçon 5 — Match</strong>
+          <p style="margin-top:6px;color:#475569;font-size:13px">Mise en situation et match training.</p>
+        </div>
+      </div>
+
+      <div class="footer">Cliquez sur un bouton pour ouvrir la leçon (les boutons reliés forment le train)</div>
+    </div>
+  </div>
+
+  <script>
+    // Interaction: afficher la leçon correspondante et marquer le noeud actif
+    const nodes = document.querySelectorAll('.node');
+    const lessons = document.querySelectorAll('.lesson');
+
+    function setActive(n) {
+      nodes.forEach(btn=>{
+        const is = btn.dataset.lesson === String(n);
+        btn.classList.toggle('active', is);
+        btn.setAttribute('aria-pressed', is? 'true' : 'false');
+      });
+      lessons.forEach(l=>{
+        l.classList.toggle('hidden', l.dataset.content !== String(n));
+      });
+    }
+
+    nodes.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const n = Number(btn.dataset.lesson);
+        setActive(n);
+      });
+    });
+
+    // initial
+    setActive(1);
+  </script>
+</body>
+</html>
