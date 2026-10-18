@@ -1,35 +1,237 @@
 <!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Leaderboard - Tennis Rank</title>
-  <style>
-    body{font-family:Arial, Helvetica, sans-serif;padding:20px;background:#f7f7f7;color:#333}
-    h1{margin-bottom:10px}
-    table{width:100%;border-collapse:collapse;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-    th,td{padding:12px;border-bottom:1px solid #eee;text-align:left}
-    th{background:#fafafa}
-    a{color:#0077cc}
-    .small{font-size:0.9em;color:#666}
-  </style>
-</head>
-<body>
-  <h1>Leaderboard</h1>
-  <p class="small">Classement des joueurs — affichage de démonstration</p>
-  <table>
-    <thead>
-      <tr><th>Place</th><th>Nom</th><th>Points</th><th>Pays</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>1</td><td>Alice Dupont</td><td>1780</td><td>FR</td></tr>
-      <tr><td>2</td><td>Jean Martin</td><td>1725</td><td>FR</td></tr>
-      <tr><td>3</td><td>Lucas Silva</td><td>1690</td><td>BR</td></tr>
-      <tr><td>4</td><td>Maria Gomez</td><td>1650</td><td>ES</td></tr>
-    </tbody>
-  </table>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaderboard | Tennis Rank</title>
+    <style>
+      :root {
+        --bg: #f3f7ff;
+        --panel: rgba(255, 255, 255, 0.88);
+        --panel-border: rgba(89, 118, 167, 0.14);
+        --text: #1f2d3d;
+        --muted: #62738a;
+        --accent: #3a7bd5;
+        --accent-2: #7db4ff;
+        --green: #22c55e;
+        --gold: #f7c948;
+        --shadow: rgba(20, 39, 76, 0.1);
+      }
 
-  <p style="margin-top:16px"><a href="index.html">Retour à l'index</a> — <a href="home.html">Accueil</a></p>
+      * { box-sizing: border-box; }
 
-</body>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(180deg, #eef5ff 0%, #f8fbff 100%);
+        color: var(--text);
+      }
+
+      .container {
+        width: min(1100px, calc(100% - 32px));
+        margin: 48px auto;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 22px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 3rem);
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid transparent;
+      }
+
+      .button.primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: white;
+        box-shadow: 0 16px 28px rgba(58, 123, 213, 0.2);
+      }
+
+      .button.secondary {
+        background: #eef5ff;
+        color: var(--text);
+        border-color: rgba(89, 118, 167, 0.12);
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: 24px;
+        box-shadow: 0 18px 40px var(--shadow);
+        overflow: hidden;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        padding: 18px 20px;
+        text-align: left;
+        border-bottom: 1px solid rgba(89, 118, 167, 0.10);
+      }
+
+      th {
+        background: #f6f9ff;
+        color: var(--muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      tbody tr:hover {
+        background: rgba(125, 180, 255, 0.04);
+      }
+
+      .rank {
+        font-weight: 800;
+        color: var(--accent);
+      }
+
+      .player {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #a6d5ff, #78b9ff);
+        color: white;
+        font-weight: 800;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 800;
+      }
+
+      .active { background: rgba(34, 197, 94, 0.12); color: #15803d; }
+      .hot { background: rgba(247, 201, 72, 0.13); color: #9a6b00; }
+      .new { background: rgba(123, 162, 255, 0.12); color: #2354c8; }
+
+      @media (max-width: 700px) {
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        th, td {
+          padding: 14px 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <h1>Leaderboard</h1>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a class="button secondary" href="index.html">Index</a>
+          <a class="button primary" href="home.html">Accueil</a>
+        </div>
+      </div>
+
+      <div class="panel">
+        <table aria-label="Leaderboard Tennis Rank">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Joueur</th>
+              <th>Points</th>
+              <th>Rang</th>
+              <th>État</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rank">1</td>
+              <td>
+                <div class="player">
+                  <div class="avatar">A</div>
+                  <span>Alex Martin</span>
+                </div>
+              </td>
+              <td>1840</td>
+              <td>Pro</td>
+              <td><span class="badge active">Actif</span></td>
+            </tr>
+            <tr>
+              <td class="rank">2</td>
+              <td>
+                <div class="player">
+                  <div class="avatar" style="background:linear-gradient(135deg,#ffc49a,#ff93a3);">L</div>
+                  <span>Lucas Bernard</span>
+                </div>
+              </td>
+              <td>1765</td>
+              <td>Elite</td>
+              <td><span class="badge hot">Très bon</span></td>
+            </tr>
+            <tr>
+              <td class="rank">3</td>
+              <td>
+                <div class="player">
+                  <div class="avatar" style="background:linear-gradient(135deg,#66d9c8,#49b2ff);">E</div>
+                  <span>Emma Petit</span>
+                </div>
+              </td>
+              <td>1689</td>
+              <td>Confirmé</td>
+              <td><span class="badge new">En hausse</span></td>
+            </tr>
+            <tr>
+              <td class="rank">4</td>
+              <td>
+                <div class="player">
+                  <div class="avatar" style="background:linear-gradient(135deg,#a5b4fc,#7dd3fc);">H</div>
+                  <span>Hugo Leroy</span>
+                </div>
+              </td>
+              <td>1610</td>
+              <td>Intermédiaire</td>
+              <td><span class="badge active">Stable</span></td>
+            </tr>
+            <tr>
+              <td class="rank">5</td>
+              <td>
+                <div class="player">
+                  <div class="avatar" style="background:linear-gradient(135deg,#f9b5d0,#e786ff);">C</div>
+                  <span>Charlotte Roux</span>
+                </div>
+              </td>
+              <td>1550</td>
+              <td>Ambitieux</td>
+              <td><span class="badge hot">Prometteur</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
 </html>
+
