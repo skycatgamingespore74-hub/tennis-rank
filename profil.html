@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profil | Tennis Rank</title>
     <style>
-      :root {
-        --bg: #f5f8ff;
-        --card: rgba(255,255,255,0.92);
-        --card-border: rgba(96, 124, 171, 0.12);
-        --text: #1d2939;
-        --muted: #5a677d;
-        --accent: #2f6fe5;
-        --accent-soft: #deebff;
-        --green: #25b772;
-        --shadow: rgba(18, 40, 80, 0.08);
+      :root{
+        color-scheme: dark;
+        --bg: #0b1020;
+        --card-from: rgba(255,255,255,0.03);
+        --card-to: rgba(0,0,0,0.08);
+        --accent-1: #79a9ff;
+        --accent-2: #5d8dff;
+        --muted: #aab6d5;
+        --text: #f4f7ff;
+        --panel-border: rgba(170,190,230,0.12);
+        --shadow: rgba(0,0,0,0.38);
       }
 
       * { box-sizing: border-box; }
@@ -22,150 +23,64 @@
       body {
         margin: 0;
         min-height: 100vh;
-        background: linear-gradient(180deg, #edf5ff 0%, #f9fbff 100%);
+        background: radial-gradient(circle at 20% 0%, #243d72, var(--bg) 60%);
         font-family: "Segoe UI", Arial, sans-serif;
         color: var(--text);
+        padding: 24px;
+        display: grid;
+        place-items: center;
       }
 
       .container {
         width: min(900px, calc(100% - 32px));
-        margin: 60px auto;
+        margin: 0 auto;
       }
 
       .card {
-        background: var(--card);
-        border: 1px solid var(--card-border);
-        border-radius: 28px;
-        box-shadow: 0 18px 45px var(--shadow);
-        padding: clamp(22px, 4vw, 38px);
-      }
-
-      .header {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-        align-items: center;
-        margin-bottom: 22px;
-      }
-
-      .profile {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-      }
-
-      .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        font-size: 2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #5aa6ff, #688af7);
-        color: white;
-      }
-
-      h1 {
-        margin: 0;
-        font-size: clamp(2rem, 5vw, 2.7rem);
-      }
-
-      .subtitle {
-        margin: 4px 0 0;
-        color: var(--muted);
-      }
-
-      .nav {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      .button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 999px;
-        padding: 12px 16px;
-        text-decoration: none;
-        font-weight: 700;
-      }
-
-      .button.primary {
-        background: linear-gradient(135deg, var(--accent), #6da7ff);
-        color: white;
-      }
-
-      .button.secondary {
-        background: #eef4ff;
-        color: var(--text);
-      }
-
-      .stats {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(150px, 1fr));
-        gap: 14px;
-        margin-top: 30px;
-      }
-
-      .stat {
-        background: #f7faff;
-        border: 1px solid rgba(96, 124, 171, 0.12);
+        background: linear-gradient(180deg,var(--card-from),var(--card-to));
+        border: 1px solid var(--panel-border);
         border-radius: 18px;
-        padding: 18px;
+        box-shadow: 0 18px 45px var(--shadow);
+        padding: clamp(18px, 3vw, 32px);
       }
 
-      .label {
-        color: var(--muted);
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-      }
+      .header { display:flex; justify-content:space-between; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:18px }
+      .profile { display:flex; align-items:center; gap:14px }
+      .avatar { width:84px; height:84px; border-radius:12px; display:grid; place-items:center; background:linear-gradient(135deg,var(--accent-1),var(--accent-2)); color:#081126; font-weight:800; font-size:1.6rem }
 
-      .value {
-        margin-top: 12px;
-        font-size: clamp(1.5rem, 4vw, 2.2rem);
-        font-weight: 800;
-      }
+      h1 { margin:0; font-size:clamp(1.6rem,4vw,2.4rem) }
+      .subtitle { margin:4px 0 0; color:var(--muted) }
 
-      .meta {
-        margin-top: 30px;
-        display: grid;
-        gap: 12px;
-      }
+      .nav { display:flex; gap:10px }
+      .button{ border-radius:999px; padding:10px 14px; text-decoration:none; font-weight:700 }
+      .button.primary { background:linear-gradient(90deg,var(--accent-1),var(--accent-2)); color:#081126 }
+      .button.secondary { background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--text); }
 
-      .info {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 14px 16px;
-        border-radius: 14px;
-        background: rgba(222, 235, 255, 0.45);
-        border: 1px solid rgba(96, 124, 171, 0.08);
-      }
+      .stats{ display:grid; grid-template-columns: repeat(3,minmax(150px,1fr)); gap:12px; margin-top:18px }
+      .stat{ background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); border-radius:12px; padding:14px }
+      .label{ color:var(--muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em }
+      .value{ margin-top:8px; font-weight:800; font-size:clamp(1.2rem,3vw,1.8rem) }
 
-      .info span:first-child {
-        color: var(--muted);
-      }
+      .meta{ margin-top:16px; display:grid; gap:10px }
+      .info{ display:flex; justify-content:space-between; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03) }
+      .info span:first-child{ color:var(--muted) }
 
-      .info strong {
-        color: var(--text);
-      }
+      .lang{ position:absolute; top:12px; right:12px }
+      .lang select{ padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text) }
 
-      @media (max-width: 640px) {
-        .stats {
-          grid-template-columns: 1fr;
-        }
-
-        .profile {
-          align-items: flex-start;
-        }
-      }
+      @media(max-width:640px){ .stats{ grid-template-columns:1fr } .profile{ align-items:flex-start } }
     </style>
   </head>
   <body>
+    <div class="lang">
+      <select id="langSelect" aria-label="Sélection de la langue">
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
     <div class="container">
       <div class="card">
         <div class="header">
@@ -184,36 +99,29 @@
         </div>
 
         <div class="stats">
-          <div class="stat">
-            <div class="label">Points</div>
-            <div class="value">1840</div>
-          </div>
-          <div class="stat">
-            <div class="label">Matchs</div>
-            <div class="value">42</div>
-          </div>
-          <div class="stat">
-            <div class="label">Victoires</div>
-            <div class="value">31</div>
-          </div>
+          <div class="stat"><div class="label">Points</div><div class="value">1840</div></div>
+          <div class="stat"><div class="label">Matchs</div><div class="value">42</div></div>
+          <div class="stat"><div class="label">Victoires</div><div class="value">31</div></div>
         </div>
 
         <div class="meta">
-          <div class="info">
-            <span>Classement</span>
-            <strong>#1</strong>
-          </div>
-          <div class="info">
-            <span>Rang actuel</span>
-            <strong>Elite</strong>
-          </div>
-          <div class="info">
-            <span>Dernière activité</span>
-            <strong>Il y a 2 jours</strong>
-          </div>
+          <div class="info"><span>Classement</span><strong>#1</strong></div>
+          <div class="info"><span>Rang actuel</span><strong>Elite</strong></div>
+          <div class="info"><span>Dernière activité</span><strong>Il y a 2 jours</strong></div>
         </div>
       </div>
     </div>
+
+    <script>
+      (function(){
+        const sel = document.getElementById('langSelect');
+        function applyLocale(loc){ if(!loc) return; document.documentElement.lang = loc; localStorage.setItem('tr_locale', loc); }
+        let saved = localStorage.getItem('tr_locale') || (navigator.language || 'fr').split('-')[0] || 'fr';
+        if (['fr','de','en','zh'].indexOf(saved) === -1) saved = 'fr';
+        sel.value = saved;
+        applyLocale(saved);
+        sel.addEventListener('change', (e)=>{ applyLocale(e.target.value); location.reload(); });
+      })();
+    </script>
   </body>
 </html>
-
