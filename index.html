@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index des pages | Tennis Rank</title>
     <style>
-      :root {
-        --bg: #eef5ff;
-        --panel: rgba(255,255,255,0.9);
-        --panel-border: rgba(96, 124, 171, 0.12);
-        --text: #1f2a37;
-        --muted: #596a7d;
-        --accent: #2f6fe5;
-        --accent-soft: #eaf2ff;
-        --shadow: rgba(31, 40, 56, 0.08);
+      /* Adopt Connect-style variables so pages visually match Connect.html */
+      :root{
+        color-scheme: dark;
+        --bg: #0b1020;
+        --panel: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.08));
+        --panel-border: rgba(170,190,230,0.12);
+        --text: #f4f7ff;
+        --muted: #aab6d5;
+        --accent: #79a9ff;
+        --accent-soft: rgba(121,169,255,0.06);
+        --shadow: rgba(0,0,0,0.38);
       }
 
       * { box-sizing: border-box; }
@@ -22,77 +24,97 @@
         margin: 0;
         min-height: 100vh;
         font-family: "Segoe UI", Arial, sans-serif;
-        background: linear-gradient(180deg, #edf4ff 0%, #f9fbff 100%);
+        background: radial-gradient(circle at 20% 0%, #243d72, var(--bg) 60%);
         color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 24px;
       }
 
       .container {
         width: min(920px, calc(100% - 30px));
-        margin: 62px auto;
+        margin: 0 auto;
       }
 
       .panel {
         background: var(--panel);
         border: 1px solid var(--panel-border);
-        border-radius: 28px;
+        border-radius: 18px;
         box-shadow: 0 18px 48px var(--shadow);
-        padding: clamp(20px, 4vw, 34px);
+        padding: clamp(18px, 3vw, 28px);
+        position: relative;
       }
 
       h1 {
         margin: 0 0 12px;
-        font-size: clamp(2rem, 5vw, 2.8rem);
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
       }
 
       .sub {
-        margin: 0 0 26px;
+        margin: 0 0 18px;
         color: var(--muted);
-        font-size: 1rem;
+        font-size: 0.98rem;
       }
 
       .list {
         display: grid;
-        gap: 14px;
+        gap: 12px;
       }
 
       .item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        background: #f9fbff;
-        border: 1px solid rgba(96, 124, 171, 0.08);
-        border-radius: 18px;
-        padding: 18px 20px;
+        gap: 12px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-radius: 12px;
+        padding: 14px 16px;
       }
 
-      .item strong {
-        font-size: 1.02rem;
-      }
+      .item strong { font-size: 1.02rem; }
 
       .link {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 10px 14px;
+        padding: 8px 12px;
         border-radius: 999px;
         text-decoration: none;
         font-weight: 700;
-        background: var(--accent-soft);
-        color: var(--accent);
+        background: linear-gradient(90deg, var(--accent), #5d8dff);
+        color: #081126;
+      }
+
+      .lang {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+      }
+
+      .lang select{
+        padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);
       }
 
       @media (max-width: 620px) {
-        .item {
-          flex-direction: column;
-          align-items: flex-start;
-        }
+        .item { flex-direction: column; align-items: flex-start; }
+        body { padding: 18px; }
       }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="panel">
+        <div class="lang" aria-hidden="false">
+          <label for="langSelect" class="sr-only">Langue</label>
+          <select id="langSelect" aria-label="Sélection de la langue">
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+          </select>
+        </div>
+
         <h1>Index de l’application</h1>
         <p class="sub">Navigation rapide vers les principales pages de Tennis Rank.</p>
 
@@ -132,6 +154,22 @@
         </div>
       </div>
     </div>
+
+    <script>
+      // language selector: store selection and set document language
+      (function(){
+        const sel = document.getElementById('langSelect');
+        function applyLocale(loc){
+          if(!loc) return;
+          try{ document.documentElement.lang = loc; localStorage.setItem('tr_locale', loc); }catch(e){}
+        }
+        // init
+        const saved = localStorage.getItem('tr_locale') || navigator.language.split('-')[0] || 'fr';
+        if (['fr','de','en','zh'].indexOf(saved) === -1) saved = 'fr';
+        sel.value = saved;
+        applyLocale(saved);
+        sel.addEventListener('change', (e)=>{ applyLocale(e.target.value); location.reload(); });
+      })();
+    </script>
   </body>
 </html>
-
